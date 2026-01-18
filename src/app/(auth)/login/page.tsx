@@ -10,7 +10,7 @@ export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
-        <section className="w-full bg-white p-6 md:p-8 rounded-lg shadow-sm border border-border/50">
+        <section className="w-full bg-white p-6 md:p-8 rounded-lg shadow-sm border border-primary/20">
             <h2 className="text-3xl font-bold text-center text-primary mb-8">Sign In</h2>
 
             {/* Login form */}
@@ -18,7 +18,7 @@ export default function LoginPage() {
 
                 {/* Email Field */}
                 <div className="space-y-2">
-                    <label htmlFor="email" className="block text-sm font-medium text-foreground/80">
+                    <label htmlFor="email" className="block text-sm font-medium text-primary">
                         Email Address
                     </label>
                     <input
@@ -31,7 +31,7 @@ export default function LoginPage() {
 
                 {/* Password Field */}
                 <div className="space-y-2">
-                    <label htmlFor="password" className="block text-sm font-medium text-foreground/80">
+                    <label htmlFor="password" className="block text-sm font-medium text-primary">
                         Password
                     </label>
                     <div className="relative">
@@ -44,7 +44,9 @@ export default function LoginPage() {
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                            className="
+                                absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground 
+                                hover:text-foreground transition-colors cursor-pointer"
                         >
                             {showPassword ? (
                                 <EyeOff className="w-5 h-5" />

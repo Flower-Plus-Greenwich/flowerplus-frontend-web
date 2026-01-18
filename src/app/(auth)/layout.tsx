@@ -12,7 +12,7 @@ export default function AuthLayout({
             relative min-h-screen flex flex-col items-center 
             bg-background text-foreground font-montserrat"
         >
-            <header className="w-full p-4 border-1 border-b border-primary/20 mb-8">
+            <header className="w-full p-4 border-1 border-b border-primary/20">
                 {/* Back to Shop */}
                 <Link 
                     href="/" 
@@ -27,8 +27,8 @@ export default function AuthLayout({
 
             {/* Auth Content */}
             <main className="w-full max-w-[450px] flex flex-col items-center">
-                <section className="text-center mb-8">
-                    <h1 className="text-4xl md:text-5xl font-cormorant font-bold text-primary mb-2">FlowerPlus</h1>
+                <section className="text-center my-10">
+                    <h1 className="text-4xl md:text-5xl font-cormorant font-bold text-primary tracking-wider mb-2">FlowerPlus</h1>
                     <p className="text-muted-foreground text-md font-light tracking-wide">Welcome back</p>
                 </section>
 
