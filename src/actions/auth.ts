@@ -110,7 +110,8 @@ export async function forgotPasswordAction(prevState: ActionState, formData: For
 
     } catch (error: any) {
         console.error("Forgot password failed:", error.response?.data || error?.message);
-        const errorMessage = error.response?.data?.message || error?.message + ": Failed to send reset instructions";
+        const errorMessage = error.response?.data?.message || 
+            error?.message + ": Failed to send reset instructions";
         return {
             success: false,
             message: errorMessage,

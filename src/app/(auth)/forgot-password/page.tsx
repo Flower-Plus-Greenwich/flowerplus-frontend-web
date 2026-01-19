@@ -18,13 +18,20 @@ export default function ForgotPasswordPage() {
     const [state, action, isPending] = useActionState(forgotPasswordAction, initialState);
 
     useEffect(() => {
+        // Redirect to success page or error page based on the state
+
         if (state.success && state.data) {
-            // Get the email from the form data if available
+            // Success
             const email = state.data.email || '';
-            router.push(`/forgot-password/success?email=${encodeURIComponent(email)}`);
-        } else if (state.message && !state.success && !isPending) {
-            // Only redirect to error page if there's an error message and not currently submitting
-            router.push(`/forgot-password/error?message=${encodeURIComponent(state.message)}`);
+            router.push(`/forgot-password/success?email=${
+                encodeURIComponent(email)
+            }`);
+
+        } else if (state.message && !state.errors && !state.success && !isPending) {
+            // Error
+            router.push(`/forgot-password/error?message=${
+                encodeURIComponent(state.message as string)
+            }`);
         }
     }, [state.success, state.data, state.message, isPending, router]);
 
