@@ -32,7 +32,7 @@ export default function LoginPage() {
             <form className="space-y-6" action={action}>
 
                 {state.message && !state.success && (
-                    <div className="p-3 text-sm text-red-500 bg-red-50 border border-red-200 rounded-lg">
+                    <div className="p-4 text-sm text-red-500 bg-red-50 border border-red-500 rounded-lg">
                         {state.message}
                     </div>
                 )}
@@ -45,11 +45,10 @@ export default function LoginPage() {
                     <input
                         id="email"
                         name="email"
-                        type="email"
                         placeholder="Enter your email here"
                         className={`
                             w-full h-12 px-4 rounded-lg bg-input border 
-                            ${state.errors?.email ? 'border-red-500' : 'border-transparent'}
+                            ${state.errors?.email ? 'border-red-500 bg-red-50' : 'border-transparent'}
                             focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200
                         `}
                         autoComplete="on"
@@ -71,7 +70,11 @@ export default function LoginPage() {
                             name="password"
                             type={showPassword ? "text" : "password"}
                             placeholder="Enter your password here"
-                            className={`w-full h-12 px-4 pr-12 rounded-lg bg-input border ${state.errors?.password ? 'border-red-500' : 'border-transparent'} focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200`}
+                            className={`
+                                w-full h-12 px-4 pr-12 rounded-lg bg-input border 
+                                ${state.errors?.password ? 'border-red-500 bg-red-50' : 'border-transparent'}
+                                focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200
+                            `}
                             defaultValue=""
                         />
                         <ClientOnly>

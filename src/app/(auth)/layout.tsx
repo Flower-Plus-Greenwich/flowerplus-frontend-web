@@ -3,11 +3,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
 
-export default function AuthLayout({
-    children,
+export default async function AuthLayout({
+    children, 
 }: Readonly<{
-    children: React.ReactNode;
+    children: React.ReactNode,
 }>) {
+
     return (
         <div className="
             relative min-h-screen flex flex-col items-center 
@@ -35,16 +36,16 @@ export default function AuthLayout({
                     <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                     Back to Shop
                 </Link>
-            </header>
+            </header>   
 
             {/* Auth Content */}
             <main className="w-full max-w-[450px] flex flex-col items-center relative z-10">
                 <section className="text-center my-8">
                     <h1 className="text-4xl md:text-5xl font-cormorant font-bold text-primary tracking-wider mb-2">FlowerPlus</h1>
                     <p className="text-muted-foreground text-md font-light tracking-wide">Welcome back</p>
-                </section>
+                </section>  
 
-                {children}
+                {children}  
             </main>
         </div>
     );

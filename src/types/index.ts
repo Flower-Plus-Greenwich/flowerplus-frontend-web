@@ -1,3 +1,8 @@
-// Global types can be exported here
-// Example:
-// export interface User { ... }
+export type ActionState = {
+    success?: boolean;
+    message?: string;
+    errors?: {
+        [key: string]: string[];
+    };
+    data?: any;
+};

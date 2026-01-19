@@ -29,12 +29,12 @@ export default function RegisterPage() {
     <section className="w-full bg-white p-6 md:p-8 rounded-lg shadow-sm border border-primary/20">
       <h2 className="text-3xl font-bold text-center text-primary mb-8">Register</h2>
 
-      {/* Register Form  */}
+      {/* Register Form */}
       <form className="space-y-4" action={action}>
 
         {/* Error Message */}
         {state.message && !state.success && (
-          <div className="p-3 text-sm text-red-500 bg-red-50 border border-red-200 rounded-lg">
+          <div className="p-4 text-sm text-red-500 bg-red-50 border border-red-500 rounded-lg">
             {state.message}
           </div>
         )}
@@ -52,7 +52,7 @@ export default function RegisterPage() {
               placeholder="Your first name"
               className={`
                 w-full h-12 px-4 rounded-lg bg-input border 
-                ${state.errors?.firstName ? 'border-red-500' : 'border-transparent'} 
+                ${state.errors?.firstName ? 'border-red-500 bg-red-50' : 'border-transparent'} 
                 focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200
               `}
               autoComplete="given-name"
@@ -72,7 +72,11 @@ export default function RegisterPage() {
               name="lastName"
               type="text"
               placeholder="Your last name"
-              className={`w-full h-12 px-4 rounded-lg bg-input border ${state.errors?.lastName ? 'border-red-500' : 'border-transparent'} focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200`}
+              className={`
+                w-full h-12 px-4 rounded-lg bg-input border 
+                  ${state.errors?.lastName ? 'border-red-500 bg-red-50' : 'border-transparent'} 
+                focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200
+              `}
               autoComplete="family-name"
               defaultValue=""
             />
@@ -83,16 +87,19 @@ export default function RegisterPage() {
         </fieldset>
 
         {/* Email Address */}
-        <div className="space-y-2">
+        <div className="space-y-2"> 
           <label htmlFor="email" className="block text-sm font-medium ">
             Email Address
           </label>
           <input
             id="email"
-            name="email"
-            type="email"
+            name="email"  
             placeholder="Your email address"
-            className={`w-full h-12 px-4 rounded-lg bg-input border ${state.errors?.email ? 'border-red-500' : 'border-transparent'} focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200`}
+            className={`
+              w-full h-12 px-4 rounded-lg bg-input border 
+              ${state.errors?.email ? 'border-red-500 bg-red-50' : 'border-transparent'} 
+              focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200
+            `}
             autoComplete="email"
             defaultValue=""
           />
@@ -112,7 +119,11 @@ export default function RegisterPage() {
               name="password"
               type={showPassword ? "text" : "password"}
               placeholder="Type your password"
-              className={`w-full h-12 px-4 pr-12 rounded-lg bg-input border ${state.errors?.password ? 'border-red-500' : 'border-transparent'} focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200`}
+              className={`
+                w-full h-12 px-4 pr-12 rounded-lg bg-input border 
+                ${state.errors?.password ? 'border-red-500 bg-red-50' : 'border-transparent'} 
+                focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200
+              `}
               defaultValue=""
             />
             <button
@@ -142,7 +153,11 @@ export default function RegisterPage() {
             name="confirmPassword"
             type="password"
             placeholder="Type your password again"
-            className={`w-full h-12 px-4 rounded-lg bg-input border ${state.errors?.confirmPassword ? 'border-red-500' : 'border-transparent'} focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200`}
+            className={`
+              w-full h-12 px-4 rounded-lg bg-input border 
+              ${state.errors?.confirmPassword ? 'border-red-500 bg-red-50' : 'border-transparent'} 
+              focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200
+            `}
             defaultValue=""
           />
           {state.errors?.confirmPassword && (

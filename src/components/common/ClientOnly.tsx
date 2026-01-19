@@ -9,6 +9,7 @@ export default function ClientOnly({ children }: { children: React.ReactNode }) 
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    // This can effect the performance a bit but it can prevent tree shaking hydration errors  
     setMounted(true)
   }, [])
 

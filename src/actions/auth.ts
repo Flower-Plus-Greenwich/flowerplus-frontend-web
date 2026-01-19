@@ -1,20 +1,12 @@
 'use server';
 
 import { axiosBackend } from "@/lib/axios"; // Verify this handles server-side usage correctly
-import { loginSchema, registerSchema } from "@/lib/schemas";
-import { z } from "zod";
+import { loginSchema, registerSchema, forgotPasswordSchema } from "@/lib/schemas";
 
-export type ActionState = {
-    success?: boolean;
-    message?: string;
-    errors?: {
-        [key: string]: string[];
-    };
-    data?: any;
-};
+import { ActionState } from "@/types";
 
 export async function loginAction(prevState: ActionState, formData: FormData): Promise<ActionState> {
-    
+
     const rawData = Object.fromEntries(formData);
     const validatedFields = loginSchema.safeParse(rawData);
 
@@ -23,7 +15,7 @@ export async function loginAction(prevState: ActionState, formData: FormData): P
         return {
             success: false,
             errors: validatedFields.error.flatten().fieldErrors,
-            message: "Invalid fields",
+            message: "Please don't leave any field empty or invalid format",
         };
     }
 
@@ -35,13 +27,13 @@ export async function loginAction(prevState: ActionState, formData: FormData): P
 
         return {
             success: true,
-            data: response.data,
-            message: response.data.message || "Login successful",
+            data: response?.data,
+            message: response?.data?.message || "Login successful",
         };
 
     } catch (error: any) {
-        console.error("Login failed:", error.response?.data || error.message);
-        const errorMessage = error.response?.data?.message || "Invalid credentials";
+        console.error("Login failed:", error.response?.data || error?.message);
+        const errorMessage = error.response?.data?.message || error?.message + ": Invalid credentials";
         return {
             success: false,
             message: errorMessage,
@@ -50,7 +42,7 @@ export async function loginAction(prevState: ActionState, formData: FormData): P
 }
 
 export async function registerAction(prevState: ActionState, formData: FormData): Promise<ActionState> {
-    
+
     const rawData = Object.fromEntries(formData);
     const validatedFields = registerSchema.safeParse(rawData);
 
@@ -59,7 +51,7 @@ export async function registerAction(prevState: ActionState, formData: FormData)
         return {
             success: false,
             errors: validatedFields.error.flatten().fieldErrors,
-            message: "Invalid fields",
+            message: "Make sure to fill all fields correctly",
         };
     }
 
@@ -81,11 +73,48 @@ export async function registerAction(prevState: ActionState, formData: FormData)
         };
 
     } catch (error: any) {
-        console.error("Registration failed:", error.response?.data || error.message);
-        const errorMessage = error.response?.data?.message || "Registration failed";
+        console.error("Registration failed:", error.response?.data || error?.message);
+        const errorMessage = error.response?.data?.message || error?.message + ": Registration failed";
         return {
             success: false,
             message: errorMessage,
         };
     }
 }
+
+export async function forgotPasswordAction(prevState: ActionState, formData: FormData): Promise<ActionState> {
+
+    const rawData = Object.fromEntries(formData);
+    const validatedFields = forgotPasswordSchema.safeParse(rawData);
+
+    // Validation failed    
+    if (!validatedFields.success) {
+        return {
+            success: false,
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: "Please enter a valid email address",
+        };
+    }
+
+    const { email } = validatedFields.data;
+
+    // Call backend API 
+    try {
+        const response = await axiosBackend.post('/auth/forgot-password', { email });
+
+        return {
+            success: true,
+            data: { ...response.data, email }, // Include email in response data
+            message: response.data.message || "Password reset instructions sent to your email",
+        };
+
+    } catch (error: any) {
+        console.error("Forgot password failed:", error.response?.data || error?.message);
+        const errorMessage = error.response?.data?.message || error?.message + ": Failed to send reset instructions";
+        return {
+            success: false,
+            message: errorMessage,
+        };
+    }
+}
+

@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { axiosBackend } from '@/lib/axios';
+// import { axiosBackend } from '@/lib/axios';
 
 export async function POST(request: Request) {
     try {
-        const body = await request.json();
+        // const body = await request.json();
         // console.log("Register request (server)", body);
 
         // const response = await axiosBackend.post('/auth/register', body);
