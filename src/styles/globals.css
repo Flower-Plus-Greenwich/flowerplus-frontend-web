@@ -1,0 +1,53 @@
+@import "tailwindcss";
+@import "./animation.css";
+
+:root {
+    --background: #FDFBF7;
+    /* Cream/Beige background */
+    --foreground: #4A4A4A;
+    /* Dark gray text */
+    --primary: #5C4B43;
+    /* Brown for buttons/accents */
+    --primary-foreground: #FFFFFF;
+    --input-bg: #F4F1ED;
+    /* Slightly darker beige for inputs */
+    --border: #E5E5E5;
+}
+
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-input: var(--input-bg);
+    --color-border: var(--border);
+    --font-cormorant: var(--font-cormorant);
+    --font-montserrat: var(--font-montserrat);
+}
+
+
+body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-montserrat);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-cormorant);
+}
+
+/* Autofill style fix */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+  box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+  -webkit-text-fill-color: var(--foreground) !important;
+}
