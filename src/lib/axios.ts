@@ -1,32 +1,25 @@
 import axios from 'axios';
+import { getRefreshToken, setAccessToken } from './auth/tokens';
 
 // 1. Frontend Interaction (Client -> Next.js API Routes)
-// This is used in React components to call your own Next.js API
 export const axiosFrontend = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL, // e.g. /api or http://localhost:3000/api
+    baseURL: process.env.NEXT_PUBLIC_API_URL,
     headers: {
         'Content-Type': 'application/json',
     },
     timeout: 10000,
 });
 
-// In-memory access token storage
-let accessToken: string | null = null;
 
-export const setAccessToken = (token: string | null) => {
-    accessToken = token;
-};
-
-export const getAccessToken = () => accessToken;
-
-// Helper to add auth token (if needed) to frontend requests
+// Request interceptors 
 axiosFrontend.interceptors.request.use((config) => {
-    if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
-    }
+    // if (accessToken) {
+    //     config.headers.Authorization = `Bearer ${accessToken}`;
+    // }
     return config;
 });
 
+// Response interceptors    
 axiosFrontend.interceptors.response.use(
     (response) => response,
     (error) => {
@@ -41,12 +34,12 @@ axiosFrontend.interceptors.response.use(
 
 
 // 2. Backward Interaction (Next.js Server -> Java Backend)
-// This is used inside API Routes or Server Actions
 export const axiosBackend = axios.create({
     baseURL: process.env.BACKEND_URL, // e.g. http://localhost:8080
     headers: {
         'Content-Type': 'application/json',
     },
+    withCredentials: true,
     timeout: 10000,
 });
 
@@ -59,11 +52,20 @@ axiosBackend.interceptors.request.use((config) => {
 
 axiosBackend.interceptors.response.use(
     (response) => response,
-    (error) => {
+    async (error) => {
         if (error.response?.status === 401) {
-            // Redirect to login
-            // window.location.href = '/login';
-            console.error("Unauthorized");
+
+            // Get new access token 
+            const refreshToken = await getRefreshToken();
+            if (refreshToken) {
+                const response = await axios.post("/auth/refresh", 
+                    { refreshToken }, 
+                    { withCredentials: true }
+                );
+                const { accessToken } = response?.data?.data;
+                setAccessToken(accessToken);
+            }
+            
         }
         return Promise.reject(error);
     }

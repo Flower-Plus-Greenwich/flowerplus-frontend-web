@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
@@ -15,9 +15,14 @@ const initialState = {
 
 export default function ForgotPasswordPage() {
     const router = useRouter();
+
+    // Form state
+    const [email, setEmail] = useState('');
+
+    // Server action state
     const [state, action, isPending] = useActionState(forgotPasswordAction, initialState);
 
-    useEffect(() => {
+    useEffect(() => {   
         // Redirect to success page or error page based on the state
 
         if (state.success && state.data) {
@@ -66,15 +71,15 @@ export default function ForgotPasswordPage() {
                     <input
                         id="email"
                         name="email"
-                        type="email"
-                        placeholder="asd@gamil.com"
+                        placeholder="example@gmail.com"
                         className={`
                             w-full h-12 px-4 rounded-lg bg-input border 
                             ${state.errors?.email ? 'border-red-500 bg-red-50' : 'border-transparent'}
                             focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200
                         `}
                         autoComplete="email"
-                        defaultValue=""
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                     {state.errors?.email && (
                         <p className="text-xs text-red-500">{state.errors.email[0]}</p>

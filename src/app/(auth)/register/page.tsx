@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { registerAction } from "@/actions/auth";
 import ClientOnly from "@/components/common/ClientOnly";
+import { toast } from "sonner";
 
 const initialState = {
   message: '',
@@ -15,15 +16,28 @@ const initialState = {
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [state, action, isPending] = useActionState(registerAction, initialState);
+
+  // Form state
   const [showPassword, setShowPassword] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  // Server action state  
+  const [state, action, isPending] = useActionState(registerAction, initialState);
+
 
   useEffect(() => {
     if (state.success) {
-      // TODO: success toast message
-      router.push("/login");
+      toast.success(state.message || "Registration successful! Redirecting to login...");
+
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
     }
-  }, [state.success, router]);
+  }, [state.success, state.message, router]);
 
   return (
     <section className="w-full bg-white p-6 md:p-8 rounded-lg shadow-sm border border-primary/20">
@@ -51,12 +65,13 @@ export default function RegisterPage() {
               type="text"
               placeholder="Your first name"
               className={`
-                w-full h-12 px-4 rounded-lg bg-input border 
-                ${state.errors?.firstName ? 'border-red-500 bg-red-50' : 'border-transparent'} 
-                focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200
-              `}
+              w-full h-12 px-4 rounded-lg bg-input border 
+              ${state.errors?.firstName ? 'border-red-500 bg-red-50' : 'border-transparent'} 
+              focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200
+            `}
               autoComplete="given-name"
-              defaultValue=""
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
             />
             {state.errors?.firstName && (
               <p className="text-xs text-red-500">{state.errors.firstName[0]}</p>
@@ -73,12 +88,13 @@ export default function RegisterPage() {
               type="text"
               placeholder="Your last name"
               className={`
-                w-full h-12 px-4 rounded-lg bg-input border 
-                  ${state.errors?.lastName ? 'border-red-500 bg-red-50' : 'border-transparent'} 
-                focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200
-              `}
+              w-full h-12 px-4 rounded-lg bg-input border 
+                ${state.errors?.lastName ? 'border-red-500 bg-red-50' : 'border-transparent'} 
+              focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200
+            `}
               autoComplete="family-name"
-              defaultValue=""
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
             />
             {state.errors?.lastName && (
               <p className="text-xs text-red-500">{state.errors.lastName[0]}</p>
@@ -87,21 +103,22 @@ export default function RegisterPage() {
         </fieldset>
 
         {/* Email Address */}
-        <div className="space-y-2"> 
+        <div className="space-y-2">
           <label htmlFor="email" className="block text-sm font-medium ">
             Email Address
           </label>
           <input
             id="email"
-            name="email"  
+            name="email"
             placeholder="Your email address"
             className={`
-              w-full h-12 px-4 rounded-lg bg-input border 
-              ${state.errors?.email ? 'border-red-500 bg-red-50' : 'border-transparent'} 
-              focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200
-            `}
+            w-full h-12 px-4 rounded-lg bg-input border 
+            ${state.errors?.email ? 'border-red-500 bg-red-50' : 'border-transparent'} 
+            focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200
+          `}
             autoComplete="email"
-            defaultValue=""
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           {state.errors?.email && (
             <p className="text-xs text-red-500">{state.errors.email[0]}</p>
@@ -120,11 +137,12 @@ export default function RegisterPage() {
               type={showPassword ? "text" : "password"}
               placeholder="Type your password"
               className={`
-                w-full h-12 px-4 pr-12 rounded-lg bg-input border 
-                ${state.errors?.password ? 'border-red-500 bg-red-50' : 'border-transparent'} 
-                focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200
-              `}
-              defaultValue=""
+              w-full h-12 px-4 pr-12 rounded-lg bg-input border 
+              ${state.errors?.password ? 'border-red-500 bg-red-50' : 'border-transparent'} 
+              focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200
+            `}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <button
               type="button"
@@ -154,11 +172,12 @@ export default function RegisterPage() {
             type="password"
             placeholder="Type your password again"
             className={`
-              w-full h-12 px-4 rounded-lg bg-input border 
-              ${state.errors?.confirmPassword ? 'border-red-500 bg-red-50' : 'border-transparent'} 
-              focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200
-            `}
-            defaultValue=""
+            w-full h-12 px-4 rounded-lg bg-input border 
+            ${state.errors?.confirmPassword ? 'border-red-500 bg-red-50' : 'border-transparent'} 
+            focus:border-border focus:bg-white focus:outline-none focus:ring-1 focus:ring-border transition-all duration-200
+          `}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
           {state.errors?.confirmPassword && (
             <p className="text-xs text-red-500">{state.errors.confirmPassword[0]}</p>
@@ -177,7 +196,7 @@ export default function RegisterPage() {
         </ClientOnly>
 
         {/* Sign In Link */}
-        <div className="flex justify-center items-center gap-1 text-center text-md text-foreground/70">
+        <div className="flex justify-center items-center gap-1 font-montserrat text-center text-md text-foreground/70">
           <p> Already have an account?</p>
           <Link
             href="/login"
