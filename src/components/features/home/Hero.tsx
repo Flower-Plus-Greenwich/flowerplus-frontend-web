@@ -3,7 +3,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+// import { ArrowRight } from 'lucide-react';
 
 interface TrailPoint {
     id: number;
@@ -74,12 +74,12 @@ export default function Hero() {
             <div className="max-w-2xl">
                 {/* Tagline */}
                 <div className="overflow-hidden mb-4">
-                    <span className={`
-                        block text-sm md:text-base tracking-[0.2em] uppercase transition-all duration-300 
-                        ${isRevealed ? 'text-white font-bold' : 'text-foreground/60 font-medium'
-                        }`}>
-                        Welcome to FlowerPlus
-                    </span>
+                    <span 
+                        className={`
+                            block text-sm md:text-base tracking-[0.2em] uppercase transition-all duration-300 
+                            ${isRevealed ? 'text-white font-bold' : 'text-foreground font-medium'}
+                        `}
+                    >Welcome to FlowerPlus</span>
                 </div>
 
                 {/* Main Title */}
@@ -94,7 +94,7 @@ export default function Hero() {
                 {/* Description */}
                 <p className={`
                     text-lg md:text-xl max-w-lg mb-10 leading-relaxed transition-all duration-300 
-                    ${isRevealed ? 'text-white font-bold' : 'text-foreground/70 font-light'
+                    ${isRevealed ? 'text-white font-bold' : 'text-foreground'
                     }`}>
                     Discover our curated collection of exquisite floral arrangements,
                     handcrafted with care and artistry for life&apos;s most precious moments.
