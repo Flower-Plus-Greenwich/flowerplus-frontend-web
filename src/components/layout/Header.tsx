@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { Search, Bell, ShoppingBag, Menu, X } from 'lucide-react';
 import ClientOnly from '@/components/common/ClientOnly';
@@ -9,7 +9,7 @@ const navLinks = [
     { name: 'Home', href: '/' },
     { name: 'Shop', href: '/shop' },
     { name: 'Collections', href: '/collections' },
-    { name: 'Your orders', href: '/order' },
+    { name: 'Your orders', href: '/orders' },
     { name: 'Custom Order', href: '/order/custom' },
 ];
 
@@ -20,7 +20,7 @@ export default function Header() {
         <header
             className={`
                 fixed top-0 left-0 right-0 z-50 transition-all duration-300 
-                bg-white/60 backdrop-blur-md shadow-sm py-4
+                bg-white/80 backdrop-blur-md shadow-sm py-4
             `}
         >
             <div className="container mx-auto px-6 h-full">
@@ -39,7 +39,7 @@ export default function Header() {
                             <Link
                                 key={link.name}
                                 href={link.href}
-                                className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors tracking-tight"
+                                className="text-md font-medium text-primary hover:text-black transition-colors tracking-tight"
                             >
                                 {link.name}
                             </Link>
@@ -63,7 +63,7 @@ export default function Header() {
 
                         {/* Mobile Menu Toggle */}
                         <button
-                            className="lg:hidden text-foreground/80 hover:text-primary transition-colors"
+                            className="lg:hidden text-primary hover:text-black transition-colors"
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         >
                             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -87,7 +87,9 @@ export default function Header() {
                                 key={link.name}
                                 href={link.href}
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className="text-2xl font-cormorant text-foreground hover:text-primary transition-colors border-b border-border pb-2"
+                                className="
+                                    text-2xl font-cormorant text-primary hover:text-black 
+                                    transition-colors border-b border-border pb-2 cursor-pointer"
                             >
                                 {link.name}
                             </Link>
