@@ -1,9 +1,11 @@
-// import Image from "next/image";
+import Hero from "@/components/features/home/Hero";
+import Collections from "@/components/features/home/Collections";
 
 export default function Home() {
   return (
-    <div>
-      <h1>Home</h1>
-    </div>
+    <>
+      <Hero />
+      <Collections />
+    </>
   );
 }

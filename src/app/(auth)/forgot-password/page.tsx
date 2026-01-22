@@ -18,13 +18,15 @@ export default function ForgotPasswordPage() {
 
     // Form state
     const [email, setEmail] = useState('');
+    // console.log("Email: " + email)
 
     // Server action state
     const [state, action, isPending] = useActionState(forgotPasswordAction, initialState);
 
     useEffect(() => {   
-        // Redirect to success page or error page based on the state
+        console.log("Email: " + email)
 
+        // Redirect to success page or error page based on the state
         if (state.success && state.data) {
             // Success
             const email = state.data.email || '';

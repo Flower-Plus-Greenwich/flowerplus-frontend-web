@@ -17,7 +17,7 @@ export default async function AuthLayout({
             {/* Background Image */}
             <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
                 <Image
-                    src="/images/auth-bg.png"
+                    src="/images/auth/auth-bg.png"
                     alt="Flower Background"
                     className="object-cover animate-slow-motion"
                     fill
