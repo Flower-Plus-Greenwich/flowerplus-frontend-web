@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Heart } from 'lucide-react';
 
+// hard code for now
 const PRODUCTS = [
     {
         id: 1,
@@ -74,7 +75,7 @@ export default function Selection() {
                         <span className="block text-xs md:text-sm font-medium tracking-[0.3em] text-foreground/50 uppercase mb-4">
                             Our Selection
                         </span>
-                        <h2 className="text-4xl md:text-5xl font-cormorant text-foreground">
+                        <h2 className="text-4xl md:text-5xl font-cormorant text-black font-medium">
                             Exquisite Arrangements
                         </h2>
                     </div>

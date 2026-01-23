@@ -129,12 +129,12 @@ export default function Collections() {
 
                     {/* Progress Dots */}
                     <div className="flex items-center gap-2">
-                        {Array.from({ length: maxIndex + 1 }).map((_, idx) => (
+                        {Array.from({ length: maxIndex + 1 }).map((_, index) => (
                             <div
-                                key={idx}
+                                key={index}
                                 className={`
                                     h-[3px] rounded-full transition-all duration-500 
-                                    ${idx === currentIndex ? 'w-10 bg-[#5c4a4a]' : 'w-2 bg-black/10'}
+                                    ${index === currentIndex ? 'w-10 bg-[#5c4a4a]' : 'w-2 bg-black/10'}
                                 `}
                             />
                         ))}
