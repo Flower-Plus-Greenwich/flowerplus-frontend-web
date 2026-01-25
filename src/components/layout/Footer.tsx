@@ -17,9 +17,13 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
                     {/* Logo & Description */}
                     <div className="flex flex-col gap-6">
-                        <Link href="/" className={`${cormorantGaramond.className} text-3xl font-medium text-black`}>
-                            FlowerPlus
-                        </Link>
+                        <Link 
+                            href="/" 
+                            className={
+                                `${cormorantGaramond.className} 
+                                text-3xl font-medium text-black
+                            `}
+                        >FlowerPlus</Link>
                         <p className="text-gray-600 max-w-[280px] leading-relaxed">
                             Premium floral arrangements crafted with passion and delivered with care.
                         </p>
@@ -27,11 +31,19 @@ export default function Footer() {
 
                     {/* Shop Links */}
                     <div>
-                        <h4 className={`${cormorantGaramond.className} text-xl font-medium text-black mb-6`}>Shop</h4>
+                        <h4 
+                            className={`
+                                ${cormorantGaramond.className} 
+                                text-xl font-medium text-black mb-6
+                            `}
+                        >Shop</h4>
                         <ul className="flex flex-col gap-4">
                             {["All Flowers", "Bouquets", "Arrangements", "Wedding"].map((item) => (
                                 <li key={item}>
-                                    <Link href={`/shop?category=${item.toLowerCase().replace(" ", "-")}`} className="text-gray-600 hover:text-black transition-colors">
+                                    <Link 
+                                        href={`/shop?category=${item.toLowerCase().replace(" ", "-")}`} 
+                                        className="text-gray-600 hover:text-black transition-colors"
+                                    >
                                         {item}
                                     </Link>
                                 </li>
@@ -41,7 +53,13 @@ export default function Footer() {
 
                     {/* About Links */}
                     <div>
-                        <h4 className={`${cormorantGaramond.className} text-xl font-medium text-black mb-6`}>About</h4>
+                        <h4 className={`
+                                ${cormorantGaramond.className} 
+                                text-xl font-medium text-black mb-6
+                            `}
+                        >
+                            About
+                        </h4>
                         <ul className="flex flex-col gap-4">
                             {["Our Story", "Sustainability", "Care Guide", "Contact Us"].map((item) => (
                                 <li key={item}>
@@ -55,7 +73,13 @@ export default function Footer() {
 
                     {/* Subscription */}
                     <div>
-                        <h4 className={`${cormorantGaramond.className} text-xl font-medium text-black mb-6`}>Stay Connected</h4>
+                        <h4 className={
+                                `${cormorantGaramond.className} 
+                                text-xl font-medium text-black mb-6
+                            `}
+                        >
+                            Stay Connected
+                        </h4>
                         <p className="text-gray-600 mb-6 leading-relaxed">
                             Subscribe to receive exclusive offers and floral inspiration.
                         </p>
@@ -82,7 +106,7 @@ export default function Footer() {
                         © {currentYear} FlowerPlus. All rights reserved.
                     </p>
                     <div className="flex flex-wrap justify-center gap-8">
-                        {["Privacy Policy", "Terms of Service", "Shipping", "Staff Login"].map((item) => (
+                        {["Privacy Policy", "Terms of Service", "Shipping"].map((item) => (
                             <Link
                                 key={item}
                                 href={`/${item.toLowerCase().replace(" ", "-")}`}

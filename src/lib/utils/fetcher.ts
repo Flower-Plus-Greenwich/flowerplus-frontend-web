@@ -1,8 +1,11 @@
+
+import { headers as nextHeaders } from 'next/headers'
 import { getAccessToken, getRefreshToken, setAuthCookies, clearAuthCookies } from "../auth/tokens";
 
 type FetcherOptions = RequestInit & {
     timeout?: number;
     skipAuth?: boolean; // Option to add authorization header 
+    revalidate?: number;
 };
 
 const BASE_URL = process.env.BACKEND_URL || '';
@@ -16,8 +19,15 @@ async function baseFetcher(url: string, options: FetcherOptions = {}) {
         ...rest
     } = options;
 
+    // console.log("options", options)
+
+    // Set timeout for request
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), timeout);
+
+    // Get cookies
+    const headersList = await nextHeaders()
+    const cookieHeader = headersList.get('cookie') || ''
 
     // Prepare headers
     const reqHeaders = new Headers(headers);
@@ -26,6 +36,9 @@ async function baseFetcher(url: string, options: FetcherOptions = {}) {
     }
     if (!reqHeaders.has('Accept')) {
         reqHeaders.set('Accept', '*/*');
+    }
+    if (!reqHeaders.has('Cookie')) {
+        reqHeaders.set('Cookie', cookieHeader);
     }
 
     // Auto-inject Access Token
@@ -42,7 +55,9 @@ async function baseFetcher(url: string, options: FetcherOptions = {}) {
         signal: controller.signal,
     };
 
-    // Helper to perform the actual fetch
+    // console.log("config", config)
+
+    // Helper function to perform the actual fetch operation
     const performFetch = async (targetUrl: string, targetConfig: RequestInit) => {
         try {
             // Ensure URL is absolute
@@ -51,8 +66,9 @@ async function baseFetcher(url: string, options: FetcherOptions = {}) {
             return response;
         } catch (error: any) {
             if (error.name === 'AbortError') {
-                throw new Error('Request timeout');
+                console.error('Request timeout');
             }
+            console.error(error);
             throw error;
         } finally {
             clearTimeout(id);
@@ -67,6 +83,15 @@ async function baseFetcher(url: string, options: FetcherOptions = {}) {
             console.warn('Received 401, attempting to refresh token...');
 
             const refreshToken = await getRefreshToken();
+
+            // No refresh token found
+            if (!refreshToken) {
+                console.error('No refresh token found');
+                await clearAuthCookies();
+                return response;
+            }
+
+            // Has refresh token
             if (refreshToken) {
                 // Attempt to refresh
                 try {
@@ -109,7 +134,7 @@ async function baseFetcher(url: string, options: FetcherOptions = {}) {
         return response;
 
     } catch (error) {
-        throw error;
+        console.error("Error during fetch:", error);
     }
 }
 
@@ -126,7 +151,7 @@ export async function actionFetcher(url: string, options: FetcherOptions = {}) {
 export async function dataFetcher(url: string, options: FetcherOptions = {}) {
     return baseFetcher(url, {
         method: 'GET',
-        cache: 'force-cache',     // or 'default'
+        cache: 'force-cache',
         ...options
     });
 }

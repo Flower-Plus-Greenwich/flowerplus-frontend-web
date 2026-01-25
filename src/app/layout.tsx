@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Montserrat } from "next/font/google";
 import "../styles/globals.css";
 import { Toaster } from "sonner";
-import Footer from "@/components/layout/Footer";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -38,7 +37,6 @@ export default function RootLayout({
           duration={3000}
         />
         {children}
-        <Footer />
       </body>
     </html>
   );

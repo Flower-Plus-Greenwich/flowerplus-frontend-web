@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Search, Bell, ShoppingBag, Menu, X } from 'lucide-react';
+import { Search, Bell, ShoppingCart, Menu, X } from 'lucide-react';
 import ClientOnly from '@/components/common/ClientOnly';
+import UserMenu from './UserMenu';
 
 const navLinks = [
     { name: 'Home', href: '/' },
@@ -15,6 +16,7 @@ const navLinks = [
 
 export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
     return (
         <header
@@ -47,19 +49,40 @@ export default function Header() {
                     </nav>
 
                     {/* Right Side Actions */}
-                    <div className="flex items-center gap-5">
-                        <button className="text-foreground/80 hover:text-primary transition-colors">
-                            <Search size={20} strokeWidth={1.5} />
+                    <div className="flex items-center gap-8">
+                        <button
+                            className="text-primary hover:text-primary/60 transition-colors cursor-pointer"
+                        >
+                            <Search size={20} strokeWidth={2} />
                         </button>
-                        <button className="relative text-foreground/80 hover:text-primary transition-colors">
-                            <Bell size={20} strokeWidth={1.5} />
-                            <span className="absolute -top-2 -right-2 bg-primary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
-                                2
-                            </span>
+
+                        <button className="relative text-primary hover:text-primary/60 transition-colors cursor-pointer">
+                            <Bell size={20} strokeWidth={2} />
+                            <ClientOnly>
+                                <span
+                                    className="
+                                        absolute -top-2 -right-2 bg-primary text-white text-[10px] 
+                                        w-4 h-4 rounded-full flex items-center justify-center font-bold
+                                ">2</span>
+                            </ClientOnly>
+
                         </button>
-                        <button className="text-foreground/80 hover:text-primary transition-colors">
-                            <ShoppingBag size={20} strokeWidth={1.5} />
+
+                        <button className="text-primary hover:text-primary/60 transition-colors cursor-pointer">
+                            <ShoppingCart size={20} strokeWidth={2} />
                         </button>
+
+                        <button
+                            onClick={() => setIsUserMenuOpen(true)}
+                            className="text-primary hover:text-primary/60 transition-colors cursor-pointer"
+                        >
+                            <Menu size={20} strokeWidth={2} />
+                        </button>
+
+                        <UserMenu
+                            isOpen={isUserMenuOpen}
+                            onClose={() => setIsUserMenuOpen(false)}
+                        />
 
                         {/* Mobile Menu Toggle */}
                         <button

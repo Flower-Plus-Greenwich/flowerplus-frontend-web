@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
+// import { getProducts } from "@/services/api";
 
 export default function QuickCategorySection() {
 
@@ -7,6 +9,7 @@ export default function QuickCategorySection() {
         {
             id: 1,
             title: "Valentine's Day",
+            slug: "valentines-day",
             description: "Perfect flowers for this special occasion",
             products: [
                 {
@@ -38,6 +41,7 @@ export default function QuickCategorySection() {
         {
             id: 2,
             title: "Birthday Flowers",
+            slug: "birthday-flowers",
             description: "Perfect flowers for this special occasion",
             products: [
                 {
@@ -69,6 +73,7 @@ export default function QuickCategorySection() {
         {
             id: 3,
             title: "Wedding Flowers",
+            slug: "wedding-flowers",
             description: "Perfect flowers for this special occasion",
             products: [
                 {
@@ -107,12 +112,23 @@ export default function QuickCategorySection() {
                             key={category.id}
                             className="mb-20"
                         >
-                            <h2
-                                className="text-4xl md:text-5xl font-cormorant text-black font-medium"
-                            >{category.title}</h2>
-                            <p className="text-gray-600">{category.description}</p>
+                            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                                <div>
+                                    <h2
+                                        className="text-4xl md:text-5xl font-cormorant text-black font-medium mb-2"
+                                    >{category.title}</h2>
+                                    <p className="text-gray-600">{category.description}</p>
+                                </div>
+                                <Link
+                                    href={`/shop?category=${category.slug}`}
+                                    className="group flex items-center gap-2 text-sm font-medium tracking-widest uppercase text-foreground/60 hover:text-primary transition-colors duration-300"
+                                >
+                                    View all products
+                                    <span className="w-8 h-[1px] bg-foreground/20 group-hover:bg-primary group-hover:w-12 transition-all duration-300" />
+                                </Link>
+                            </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {category.products.map((product) => (
                                     <div
                                         key={product.id}

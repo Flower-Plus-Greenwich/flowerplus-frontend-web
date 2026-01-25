@@ -1,10 +1,6 @@
-'use server';
+// import { dataFetcher } from "@/lib/utils/fetcher";
 
-// import { axiosFrontend } from '@/lib/axios';
-// import { AxiosResponse } from 'axios';
-
-// use for public api 
-
-// export const productService = {
-    
+// export async function getProducts() {
+//     const response = await dataFetcher(`${process.env.BACKEND_URL}/products`);
+//     return response.json();
 // }

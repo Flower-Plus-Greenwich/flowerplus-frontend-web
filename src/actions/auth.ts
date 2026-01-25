@@ -28,17 +28,18 @@ export async function loginAction(prevState: ActionState, formData: FormData): P
             body: JSON.stringify({ email, password }),
             skipAuth: true, // Skip authorization for login
         });
+        
+        const jsonData = await response?.json();
+        console.log(jsonData)
 
-        const data = await response.json();
-
-        if (!response.ok) {
+        if (!response?.ok) {
             return {
                 success: false,
-                message: data.message || data.error?.message || "Login failed",
+                message: jsonData.message || jsonData.error?.message || "Login failed",
             };
         }
 
-        const { accessToken, refreshToken } = data.data || {};
+        const { accessToken, refreshToken } = jsonData.data || {};
 
         if (!accessToken || !refreshToken) {
             return {
@@ -52,8 +53,8 @@ export async function loginAction(prevState: ActionState, formData: FormData): P
 
         return {
             success: true,
-            data: data.data,
-            message: data.message || "Login successful",
+            data: jsonData.data,
+            message: jsonData.message || "Login successful",
         };
 
     } catch (fetchError: any) {
@@ -96,18 +97,18 @@ export async function registerAction(prevState: ActionState, formData: FormData)
             skipAuth: true,
         });
 
-        const data = await response.json();
+        const jsonData = await response?.json();
 
-        if (!response.ok) {
+        if (!response?.ok) {
             return {
                 success: false,
-                message: data.message || data.error?.message || "Registration failed",
+                message: jsonData.message || jsonData.error?.message || "Registration failed",
             };
         }
 
         return {
             success: true,
-            message: data.message || "Registration successful",
+            message: jsonData.message || "Registration successful",
         };
 
     } catch (error: any) {
@@ -144,9 +145,9 @@ export async function forgotPasswordAction(prevState: ActionState, formData: For
             skipAuth: true,
         });
 
-        const data = await response.json();
+        const data = await response?.json();
 
-        if (!response.ok) {
+        if (!response?.ok) {
             return {
                 success: false,
                 message: data.message || "Failed to send reset instructions",
@@ -174,7 +175,7 @@ export async function forgotPasswordAction(prevState: ActionState, formData: For
  */
 export async function logoutAction(): Promise<ActionState> {
     try {
-        // Clear cookies first to ensure client is effectively logged out
+        // Clear cookies
         await clearAuthCookies();
 
         // Attempt to notify backend
@@ -216,9 +217,9 @@ export async function refreshTokenAction(): Promise<ActionState> {
             skipAuth: true, // Skip authorization header because we are sending refresh token
         });
 
-        const data = await response.json();
+        const data = await response?.json();
 
-        if (!response.ok) {
+        if (!response?.ok) {
             return {
                 success: false,
                 message: "Refresh token failed",
