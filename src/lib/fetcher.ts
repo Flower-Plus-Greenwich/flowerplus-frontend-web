@@ -1,6 +1,6 @@
 
-import { headers as nextHeaders } from 'next/headers'
-import { getAccessToken, getRefreshToken, setAuthCookies, clearAuthCookies } from "../auth/tokens";
+// import { headers as nextHeaders } from 'next/headers'
+import { getAccessToken, getRefreshToken, setAuthCookies, clearAuthCookies } from "./tokens";
 
 type FetcherOptions = RequestInit & {
     timeout?: number;
@@ -26,8 +26,8 @@ async function baseFetcher(url: string, options: FetcherOptions = {}) {
     const id = setTimeout(() => controller.abort(), timeout);
 
     // Get cookies
-    const headersList = await nextHeaders()
-    const cookieHeader = headersList.get('cookie') || ''
+    // const headersList = await nextHeaders()
+    // const cookieHeader = headersList.get('cookie') || ''
 
     // Prepare headers
     const reqHeaders = new Headers(headers);
@@ -37,9 +37,9 @@ async function baseFetcher(url: string, options: FetcherOptions = {}) {
     if (!reqHeaders.has('Accept')) {
         reqHeaders.set('Accept', '*/*');
     }
-    if (!reqHeaders.has('Cookie')) {
-        reqHeaders.set('Cookie', cookieHeader);
-    }
+    // if (!reqHeaders.has('Cookie')) {
+    //     reqHeaders.set('Cookie', cookieHeader);
+    // }
 
     // Auto-inject Access Token
     if (!skipAuth) {

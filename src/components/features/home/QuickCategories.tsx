@@ -1,10 +1,28 @@
+'use client';
+
 import Image from "next/image";
 import Link from "next/link";
-// import { getProducts } from "@/services/api";
+import ClientOnly from "@/components/common/ClientOnly";
+import { motion, Easing } from "framer-motion";
+
+const fadeInUp = {
+    initial: { opacity: 0, y: 30 },
+    animate: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.8, ease: "easeOut" as Easing }
+    }
+};
+
+const staggerContainer = {
+    initial: {},
+    animate: {
+        transition: { staggerChildren: 0.1 }
+    }
+};
 
 export default function QuickCategorySection() {
-
-    // Hard coded
+    // ... (rest of categories data remains the same)
     const categories = [
         {
             id: 1,
@@ -19,7 +37,6 @@ export default function QuickCategorySection() {
                     price: 89,
                     image: "/images/home/placeholder.webp"
                 },
-
                 {
                     id: 2,
                     name: "Pink Peony Dreams",
@@ -27,7 +44,6 @@ export default function QuickCategorySection() {
                     price: 110,
                     image: "/images/home/placeholder.webp"
                 },
-
                 {
                     id: 3,
                     name: "Garden Rose Bouquet",
@@ -37,7 +53,6 @@ export default function QuickCategorySection() {
                 },
             ]
         },
-
         {
             id: 2,
             title: "Birthday Flowers",
@@ -51,7 +66,6 @@ export default function QuickCategorySection() {
                     price: 89,
                     image: "/images/home/placeholder.webp"
                 },
-
                 {
                     id: 2,
                     name: "Pink Peony Dreams",
@@ -59,7 +73,6 @@ export default function QuickCategorySection() {
                     price: 110,
                     image: "/images/home/placeholder.webp"
                 },
-
                 {
                     id: 3,
                     name: "Garden Rose Bouquet",
@@ -69,7 +82,6 @@ export default function QuickCategorySection() {
                 },
             ]
         },
-
         {
             id: 3,
             title: "Wedding Flowers",
@@ -83,7 +95,6 @@ export default function QuickCategorySection() {
                     price: 89,
                     image: "/images/home/placeholder.webp"
                 },
-
                 {
                     id: 2,
                     name: "Pink Peony Dreams",
@@ -91,7 +102,6 @@ export default function QuickCategorySection() {
                     price: 110,
                     image: "/images/home/placeholder.webp"
                 },
-
                 {
                     id: 3,
                     name: "Garden Rose Bouquet",
@@ -112,26 +122,45 @@ export default function QuickCategorySection() {
                             key={category.id}
                             className="mb-20"
                         >
-                            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                            <motion.div
+                                variants={fadeInUp}
+                                initial="initial"
+                                whileInView="animate"
+                                viewport={{ once: true }}
+                                className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12"
+                            >
                                 <div>
                                     <h2
                                         className="text-4xl md:text-5xl font-cormorant text-black font-medium mb-2"
                                     >{category.title}</h2>
                                     <p className="text-gray-600">{category.description}</p>
                                 </div>
-                                <Link
-                                    href={`/shop?category=${category.slug}`}
-                                    className="group flex items-center gap-2 text-sm font-medium tracking-widest uppercase text-foreground/60 hover:text-primary transition-colors duration-300"
-                                >
-                                    View all products
-                                    <span className="w-8 h-[1px] bg-foreground/20 group-hover:bg-primary group-hover:w-12 transition-all duration-300" />
-                                </Link>
-                            </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <ClientOnly>    
+                                    <Link
+                                        href={`/shop?category=${category.slug}`}
+                                        className="
+                                        group flex items-center gap-2 text-sm font-medium 
+                                        tracking-widest uppercase text-foreground/80 hover:text-primary 
+                                        transition-colors duration-300 cursor-pointer"
+                                    >
+                                        View all products
+                                        <span className="w-8 h-[1px] bg-foreground/20 group-hover:bg-primary group-hover:w-12 transition-all duration-300" />
+                                    </Link>
+                                </ClientOnly>
+                            </motion.div>
+
+                            <motion.div
+                                variants={staggerContainer}
+                                initial="initial"
+                                whileInView="animate"
+                                viewport={{ once: true }}
+                                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                            >
                                 {category.products.map((product) => (
-                                    <div
+                                    <motion.div
                                         key={product.id}
+                                        variants={fadeInUp}
                                         className="group cursor-pointer"
                                     >
                                         <div className="relative aspect-[3/4] overflow-hidden rounded-xl mb-4 bg-muted">
@@ -154,9 +183,9 @@ export default function QuickCategorySection() {
                                                 ${product.price}
                                             </span>
                                         </div>
-                                    </div>
+                                    </motion.div>
                                 ))}
-                            </div>
+                            </motion.div>
                         </div>
                     ))}
                 </div>
