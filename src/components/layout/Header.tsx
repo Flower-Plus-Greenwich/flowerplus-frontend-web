@@ -2,9 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Search, Bell, ShoppingCart, Menu, X } from 'lucide-react';
 import ClientOnly from '@/components/common/ClientOnly';
 import UserMenu from './UserMenu';
+import Tooltip from '@/components/ui/Tooltip';
 
 const navLinks = [
     { name: 'Home', href: '/' },
@@ -17,6 +19,7 @@ const navLinks = [
 export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+    const pathname = usePathname();
 
     return (
         <header
@@ -36,48 +39,83 @@ export default function Header() {
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <nav className="hidden lg:flex items-center gap-8">
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.name}
-                                href={link.href}
-                                className="text-md font-medium text-primary hover:text-black transition-colors tracking-tight"
-                            >
-                                {link.name}
-                            </Link>
-                        ))}
+                    <nav className="hidden lg:flex items-center gap-6">
+                        {navLinks.map((link) => {
+                            const isActive = pathname === link.href;
+                            return (
+                                <Link
+                                    key={link.name}
+                                    href={link.href}
+                                    className={`
+                                        transition-all duration-300 tracking-tight
+                                        ${isActive
+                                            ? 'text-lg font-bold text-primary'
+                                            : 'text-md font-medium text-primary hover:text-black'
+                                        }
+                                    `}
+                                >
+                                    {link.name}
+                                </Link>
+                            );
+                        })}
                     </nav>
 
                     {/* Right Side Actions */}
-                    <div className="flex items-center gap-8">
-                        <button
-                            className="text-primary hover:text-primary/60 transition-colors cursor-pointer"
-                        >
-                            <Search size={20} strokeWidth={2} />
-                        </button>
-
-                        <button className="relative text-primary hover:text-primary/60 transition-colors cursor-pointer">
-                            <Bell size={20} strokeWidth={2} />
+                    <div className="flex items-center gap-4">
+                        <Tooltip content="Search">
                             <ClientOnly>
-                                <span
+                                <button
                                     className="
-                                        absolute -top-2 -right-2 bg-primary text-white text-[10px] 
-                                        w-4 h-4 rounded-full flex items-center justify-center font-bold
-                                ">2</span>
+                                        text-primary rounded-full p-2 hover:bg-primary/8
+                                        hover:text-foreground/80 transition-colors duration-300 cursor-pointer
+                                    "
+                                >
+                                    <Search size={20} strokeWidth={2} />
+                                </button>
                             </ClientOnly>
+                        </Tooltip>
 
-                        </button>
+                        <Tooltip content="Notifications">
+                            <ClientOnly>
+                                <button className="
+                                    relative text-primary rounded-full p-2 hover:bg-primary/8
+                                    hover:text-foreground/80 hover:text-primary/60 transition-colors duration-300 cursor-pointer
+                                ">
+                                    <Bell size={20} strokeWidth={2} />
+                                        <span
+                                            className="
+                                                absolute -top-[1px] -right-[1px] bg-primary text-white text-[10px] 
+                                                w-4 h-4 rounded-full flex items-center justify-center font-bold
+                                        ">2</span>
 
-                        <button className="text-primary hover:text-primary/60 transition-colors cursor-pointer">
-                            <ShoppingCart size={20} strokeWidth={2} />
-                        </button>
+                                </button>
+                            </ClientOnly>
+                        </Tooltip>
 
-                        <button
-                            onClick={() => setIsUserMenuOpen(true)}
-                            className="text-primary hover:text-primary/60 transition-colors cursor-pointer"
-                        >
-                            <Menu size={20} strokeWidth={2} />
-                        </button>
+                        <Tooltip content="Cart">
+                            <ClientOnly>
+                                <Link href="/cart" className="
+                                    rounded-full p-2 hover:bg-primary/8 hover:text-foreground/80 
+                                    hover:text-primary/60 transition-colors duration-300 cursor-pointer
+                                ">
+                                    <ShoppingCart size={20} strokeWidth={2} />
+                                </Link>
+                            </ClientOnly>
+                        </Tooltip>
+
+                        <Tooltip content="Menu">
+                            <ClientOnly>
+                                <button
+                                    onClick={() => setIsUserMenuOpen(true)}
+                                    className="
+                                        rounded-full p-2 hover:bg-primary/8
+                                        hover:text-foreground/80 hover:text-primary/60 transition-colors duration-300 cursor-pointer
+                                    "
+                                >
+                                    <Menu size={20} strokeWidth={2} />
+                                </button>
+                            </ClientOnly>
+                        </Tooltip>
 
                         <UserMenu
                             isOpen={isUserMenuOpen}

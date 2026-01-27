@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
 import React, { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-// import { ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface TrailPoint {
     id: number;
@@ -22,6 +22,7 @@ export default function Hero() {
     const easedMouse = useRef({ x: 0, y: 0 });
     const particleIdCounter = useRef(0);
 
+    // Particle trail effect
     useEffect(() => {
         let animationFrameId: number;
 
@@ -60,6 +61,7 @@ export default function Hero() {
         return () => cancelAnimationFrame(animationFrameId);
     }, []);
 
+    // Handle mouse move for particle trail effect
     const handleMouseMove = (event: React.MouseEvent) => {
         if (!containerRef.current) return;
         const rect = containerRef.current.getBoundingClientRect();
@@ -73,35 +75,54 @@ export default function Hero() {
         <div className="container mx-auto px-6">
             <div className="max-w-2xl">
                 {/* Tagline */}
-                <div className="overflow-hidden mb-4">
-                    <span 
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1, delay: 0.2 }}
+                    className="overflow-hidden mb-4"
+                >
+                    <span
                         className={`
-                            block text-sm md:text-base tracking-[0.2em] uppercase transition-all duration-300 
+                            block text-sm md:text-base tracking-[0.2em] uppercase
                             ${isRevealed ? 'text-white font-bold' : 'text-foreground font-medium'}
                         `}
                     >Welcome to FlowerPlus</span>
-                </div>
+                </motion.div>
 
                 {/* Main Title */}
-                <h1 className={`
-                    text-5xl md:text-7xl lg:text-8xl font-cormorant leading-[1.1] mb-8 transition-all duration-300 
-                    ${isRevealed ? 'text-white font-bold' : 'text-foreground font-normal'
-                    }`}>
-                    Elegance in <br />
+                <motion.h1
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1, delay: 0.6 }}
+                    className={`
+                        text-5xl md:text-7xl lg:text-8xl font-cormorant leading-[1.1] mb-8 
+                        ${isRevealed ? 'text-white font-bold' : 'text-foreground font-normal'}`
+                    }>
+                    Elegance in
+                    <br />
                     <span className="italic">Every Petal</span>
-                </h1>
+                </motion.h1>
 
                 {/* Description */}
-                <p className={`
-                    text-lg md:text-xl max-w-lg mb-10 leading-relaxed transition-all duration-300 
-                    ${isRevealed ? 'text-white font-bold' : 'text-foreground'
+                <motion.p
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1, delay: 0.8 }}
+                    className={`
+                        text-lg md:text-xl max-w-lg mb-10 leading-relaxed
+                        ${isRevealed ? 'text-white font-bold' : 'text-foreground'
                     }`}>
                     Discover our curated collection of exquisite floral arrangements,
                     handcrafted with care and artistry for life&apos;s most precious moments.
-                </p>
+                </motion.p>
 
                 {/* Action Buttons */}
-                <div className="flex flex-wrap gap-4">
+                <motion.div
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1, delay: 1 }}
+                    className="flex flex-wrap gap-4"
+                >
                     <Link
                         href="/shop"
                         className={`
@@ -125,7 +146,7 @@ export default function Hero() {
                     >
                         View Collections
                     </Link>
-                </div>
+                </motion.div>
             </div>
         </div>
     );

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, User, Heart, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
+import { isAuthenticated } from "@/lib/tokens";
 
 interface UserMenuProps {
     isOpen: boolean;
@@ -13,7 +14,7 @@ interface UserMenuProps {
 const menuItems = [
     {
         label: 'Sign In / Sign Up',
-        href: '/auth/login',
+        href: '/login',
         icon: User,
     },
     {
@@ -29,6 +30,19 @@ const menuItems = [
 ];
 
 export default function UserMenu({ isOpen, onClose }: UserMenuProps) {
+
+    // Check if user is authenticated
+    useEffect(() => {
+        const checkAuth = async () => {
+            const auth = await isAuthenticated();
+            if (auth) {
+                menuItems[0].label = 'Your profile';
+                menuItems[0].href = '/profile';
+            }
+        };
+        checkAuth();
+    }, []);
+
     const menuRef = useRef<HTMLDivElement>(null);
 
     // Close on click outside
@@ -64,6 +78,7 @@ export default function UserMenu({ isOpen, onClose }: UserMenuProps) {
             window.removeEventListener('keydown', handleEsc);
         };
     }, [isOpen, onClose]);
+
 
     return (
         <AnimatePresence>

@@ -1,21 +1,14 @@
-"use client"
+// import ClientWrapper from "@/components/common/ClientWrapper";
 
-import { useEffect } from "react";
-import { isAuthenticated } from "@/lib/auth/tokens";
 import Hero from "@/components/features/home/Hero";
 import Collections from "@/components/features/home/Collections";
 import Selection from "@/components/features/home/Selection";
 import QuickCategories from "@/components/features/home/QuickCategories";
+import { getProducts } from "@/services/product";
 
-export default function Home() {
-  useEffect(() => {
-    const checkAuth = async () => {
-      const auth = await isAuthenticated();
-      console.log(auth);
-    };
-    checkAuth();
-  }, []);
-
+export default async function Home() {
+  const products = await getProducts();
+  console.log(products)
   return (
     <>
       <Hero />

@@ -3,7 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion, Easing } from 'framer-motion';
+import ClientOnly from '@/components/common/ClientOnly';
 
+// Hard coded for now, will be replaced with API data later
 const COLLECTIONS = [
     {
         id: 1,
@@ -34,9 +37,24 @@ const COLLECTIONS = [
         title: "Graceful Lilies",
         description: "Pure and elegant lily compositions",
         image: "/images/home/placeholder.webp"
-
     }
 ];
+
+const fadeInUp = {
+    initial: { opacity: 0, y: 30 },
+    animate: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.8, ease: "easeOut" as Easing }
+    }
+};
+
+const staggerContainer = {
+    initial: {},
+    animate: {
+        transition: { staggerChildren: 0.2 }
+    }
+};
 
 export default function Collections() {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -68,27 +86,38 @@ export default function Collections() {
         <section className="w-full py-24 overflow-hidden">
             <div className="container mx-auto px-6">
                 {/* Header */}
-                <div className="text-center mb-16">
+                <motion.div
+                    variants={fadeInUp}
+                    initial="initial"
+                    whileInView="animate"
+                    viewport={{ once: true }}
+                    className="text-center mb-16"
+                >
                     <span className="block text-xs md:text-sm font-medium tracking-[0.3em] text-primary uppercase mb-4">
                         Explore Our
                     </span>
                     <h2 className="text-4xl md:text-5xl font-cormorant text-black font-medium">
                         Featured Collections
                     </h2>
-                </div>
+                </motion.div>
 
                 {/* Collections Slider Container */}
                 <div className="relative mb-16 px-1">
                     <div className="overflow-hidden">
-                        <div
+                        <motion.div
+                            variants={staggerContainer}
+                            initial="initial"
+                            whileInView="animate"
+                            viewport={{ once: true }}
                             className="flex transition-transform duration-700 cubic-bezier(0.4, 0, 0.2, 1)"
                             style={{
                                 transform: `translateX(-${currentIndex * (100 / visibleCards)}%)`
                             }}
                         >
                             {COLLECTIONS.map((item) => (
-                                <div
+                                <motion.div
                                     key={item.id}
+                                    variants={fadeInUp}
                                     className="w-full md:w-1/3 flex-shrink-0 px-3 md:px-4"
                                 >
                                     <div className="group cursor-pointer">
@@ -111,21 +140,25 @@ export default function Collections() {
                                             {item.description}
                                         </p>
                                     </div>
-                                </div>
+                                </motion.div>
                             ))}
-                        </div>
+                        </motion.div>
                     </div>
                 </div>
 
                 {/* Navigation Controls */}
                 <div className="flex items-center justify-center gap-6">
-                    <button
-                        onClick={prevSlide}
-                        className="p-2.5 rounded-full border border-black/10 hover:bg-black/5 transition-colors group"
-                        aria-label="Previous Collection"
-                    >
-                        <ChevronLeft className="w-4 h-4 text-black/40 group-hover:text-black/80" />
-                    </button>
+                    <ClientOnly>
+                        <button
+                            onClick={prevSlide}
+                            className="
+                                p-2.5 rounded-full border border-black/10 hover:bg-black/5 
+                                transition-colors group cursor-pointer"
+                            aria-label="Previous Collection"
+                        >
+                            <ChevronLeft className="w-4 h-4 text-black/40 group-hover:text-black/80" />
+                        </button>
+                    </ClientOnly>
 
                     {/* Progress Dots */}
                     <div className="flex items-center gap-2">
@@ -140,13 +173,17 @@ export default function Collections() {
                         ))}
                     </div>
 
-                    <button
-                        onClick={nextSlide}
-                        className="p-2.5 rounded-full border border-black/10 hover:bg-black/5 transition-colors group"
-                        aria-label="Next Collection"
-                    >
-                        <ChevronRight className="w-4 h-4 text-black/40 group-hover:text-black/80" />
-                    </button>
+                    <ClientOnly>
+                        <button
+                            onClick={nextSlide}
+                            className="
+                                p-2.5 rounded-full border border-black/10 hover:bg-black/5 
+                                transition-colors group cursor-pointer"
+                            aria-label="Next Collection"
+                        >
+                            <ChevronRight className="w-4 h-4 text-black/40 group-hover:text-black/80" />
+                        </button>
+                    </ClientOnly>
                 </div>
             </div>
         </section>
