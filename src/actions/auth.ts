@@ -1,8 +1,8 @@
 'use server';
 
-import { actionFetcher } from "@/lib/utils/fetcher";
-import { loginSchema, registerSchema, forgotPasswordSchema } from "@/lib/auth/schemas";
-import { setAuthCookies, clearAuthCookies, getRefreshToken, setAccessToken } from '@/lib/auth/tokens';
+import { actionFetcher } from "@/lib/fetcher";
+import { loginSchema, registerSchema, forgotPasswordSchema } from "@/lib/schemas";
+import { setAuthCookies, clearAuthCookies, getRefreshToken, setAccessToken } from '@/lib/tokens';
 import { ActionState } from "@/types";
 
 /** 
@@ -28,14 +28,24 @@ export async function loginAction(prevState: ActionState, formData: FormData): P
             body: JSON.stringify({ email, password }),
             skipAuth: true, // Skip authorization for login
         });
-        
+
+        // console.log(response)
+
+        if (response?.headers.get('Content-Type') !== 'application/json') {
+            return {
+                success: false,
+                message: `${response?.status} ${response?.statusText}: Invalid response from server, expected JSON response`,
+            };
+        }
+
         const jsonData = await response?.json();
-        console.log(jsonData)
+        // console.log(jsonData)
 
         if (!response?.ok) {
             return {
                 success: false,
-                message: jsonData.message || jsonData.error?.message || "Login failed",
+                message: `${response?.status} ${response?.statusText}: ${jsonData?.message ||
+                    jsonData?.error?.message || "Login failed"}`,
             };
         }
 
@@ -44,7 +54,7 @@ export async function loginAction(prevState: ActionState, formData: FormData): P
         if (!accessToken || !refreshToken) {
             return {
                 success: false,
-                message: "Invalid response from server",
+                message: "Invalid response from server, missing access token or refresh token",
             };
         }
 
@@ -97,12 +107,20 @@ export async function registerAction(prevState: ActionState, formData: FormData)
             skipAuth: true,
         });
 
+        // Check if response is JSON
+        if (response?.headers.get('Content-Type') !== 'application/json') {
+            return {
+                success: false,
+                message: `${response?.status} ${response?.statusText}: Invalid response from server, expected JSON response`,
+            };
+        }
+
         const jsonData = await response?.json();
 
         if (!response?.ok) {
             return {
                 success: false,
-                message: jsonData.message || jsonData.error?.message || "Registration failed",
+                message: jsonData?.message || jsonData?.error?.message || "Registration failed",
             };
         }
 
