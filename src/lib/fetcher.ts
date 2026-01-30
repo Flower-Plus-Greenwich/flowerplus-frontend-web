@@ -100,7 +100,8 @@ async function baseFetcher(url: string, options: FetcherOptions = {}) {
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ refreshToken }),
+                        // body: JSON.stringify({ refreshToken }),
+                        credentials: 'include',
                         cache: 'no-store',
                     });
 

@@ -1,50 +1,62 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, User, Heart, Globe } from 'lucide-react';
+import { X, User, Heart, Globe, LogOut } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { isAuthenticated } from "@/lib/tokens";
+import { logoutAction } from "@/actions/auth";
+import { toast } from 'sonner';
 
 interface UserMenuProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
-const menuItems = [
-    {
-        label: 'Sign In / Sign Up',
-        href: '/login',
-        icon: User,
-    },
-    {
-        label: 'Wishlist',
-        href: '/wishlist',
-        icon: Heart,
-    },
-    {
-        label: 'Language: English',
-        href: '#',
-        icon: Globe,
-    },
-];
-
 export default function UserMenu({ isOpen, onClose }: UserMenuProps) {
+    const router = useRouter();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
+
+    interface MenuItem {
+        label: string;
+        href: string;
+        icon: any;
+        onClick?: (e: React.MouseEvent) => void;
+    }
+
+    // Construct menu items based on state
+    const menuItems: MenuItem[] = [
+        {
+            label: isLoggedIn ? 'Your profile' : 'Sign In / Sign Up',
+            href: isLoggedIn ? '/profile' : '/login',
+            icon: User,
+        },
+        {
+            label: 'Wishlist',
+            href: '/wishlist',
+            icon: Heart,
+        },
+        {
+            label: 'Language: English',
+            href: '#',
+            icon: Globe,
+        },
+    ];
 
     // Check if user is authenticated
     useEffect(() => {
         const checkAuth = async () => {
             const auth = await isAuthenticated();
-            if (auth) {
-                menuItems[0].label = 'Your profile';
-                menuItems[0].href = '/profile';
-            }
+            setIsLoggedIn(auth);
         };
-        checkAuth();
-    }, []);
 
-    const menuRef = useRef<HTMLDivElement>(null);
-
+        if (isOpen) {
+            checkAuth()
+        }
+    }, [isOpen]);
+    
     // Close on click outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -78,6 +90,30 @@ export default function UserMenu({ isOpen, onClose }: UserMenuProps) {
             window.removeEventListener('keydown', handleEsc);
         };
     }, [isOpen, onClose]);
+
+    const handleLogout = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        try {
+            await logoutAction();
+            setIsLoggedIn(false);
+            toast.success('Logout successful');
+            onClose();
+            router.refresh();
+            router.push('/');
+        } catch (error) {
+            console.error("Logout failed", error);
+            toast.error('Logout failed');
+        }
+    };
+
+    if (isLoggedIn) {
+        menuItems.push({
+            label: 'Sign Out',
+            href: '#',
+            icon: LogOut,
+            onClick: handleLogout,
+        });
+    }
 
 
     return (
@@ -116,21 +152,40 @@ export default function UserMenu({ isOpen, onClose }: UserMenuProps) {
                             </div>
 
                             <div className="space-y-2">
-                                {menuItems.map((item) => (
-                                    <Link
-                                        key={item.label}
-                                        href={item.href}
-                                        onClick={onClose}
-                                        className="flex items-center gap-4 p-3 hover:bg-black/5 rounded-xl transition-all group"
-                                    >
-                                        <div className="w-10 h-10 flex items-center justify-center bg-input-bg">
-                                            <item.icon size={20} className="text-primary" />
-                                        </div>
-                                        <span className="text-[15px] font-medium text-foreground group-hover:text-primary transition-colors">
-                                            {item.label}
-                                        </span>
-                                    </Link>
-                                ))}
+                                {menuItems.map((item) => {
+                                    const Component = item.onClick ? 'button' : Link;
+                                    const props: any = {
+                                        href: !item.onClick ? item.href : undefined,
+                                        className: `
+                                            flex items-center w-full gap-4 p-3 hover:bg-black/5 
+                                            rounded-xl transition-all group text-left cursor-pointer`,
+                                        onClick: item.onClick ? item.onClick : onClose,
+                                    };
+
+
+                                    return (
+                                        <Component 
+                                            key={item.label} 
+                                            {...props}
+                                        >
+                                            <div className={`
+                                                w-10 h-10 flex items-center justify-center bg-input-bg rounded-lg
+                                                ${item.onClick ? 'text-red-500' : 'text-primary'}
+                                            `}>
+                                                <item.icon size={20} />
+                                            </div>
+                                            <span className={
+                                                `text-[15px] font-medium text-foreground transition-colors 
+                                                ${item.onClick ? 
+                                                    'text-red-500 group-hover:text-red-500 ' : 
+                                                    'text-primary group-hover:text-primary '
+                                                }`
+                                            }>
+                                                {item.label}
+                                            </span>
+                                        </Component>
+                                    );
+                                })}
                             </div>
                         </div>
                     </motion.div>
