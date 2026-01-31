@@ -39,7 +39,7 @@ src/
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Flower-Plus-Greenwich/flowerplus-frontend-web.git
    ```
 
 2. Navigate to the project directory:

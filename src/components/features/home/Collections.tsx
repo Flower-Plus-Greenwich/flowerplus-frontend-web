@@ -1,44 +1,45 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, Easing } from 'framer-motion';
 import ClientOnly from '@/components/common/ClientOnly';
+import { Collection } from '@/types/collection';
 
 // Hard coded for now, will be replaced with API data later
-const COLLECTIONS = [
-    {
-        id: 1,
-        title: "Orchid Paradise",
-        description: "Exotic orchids for sophisticated elegance",
-        image: "/images/home/placeholder.webp"
-    },
-    {
-        id: 2,
-        title: "Sunshine Collection",
-        description: "Bright and cheerful sunflower arrangements",
-        image: "/images/home/placeholder.webp"
-    },
-    {
-        id: 3,
-        title: "Premium Bouquets",
-        description: "Handcrafted luxury arrangements",
-        image: "/images/home/placeholder.webp"
-    },
-    {
-        id: 4,
-        title: "Spring Bloom",
-        description: "Fresh seasonal flowers from our gardens",
-        image: "/images/home/placeholder.webp"
-    },
-    {
-        id: 5,
-        title: "Graceful Lilies",
-        description: "Pure and elegant lily compositions",
-        image: "/images/home/placeholder.webp"
-    }
-];
+// const COLLECTIONS = [
+//     {
+//         id: 1,
+//         title: "Orchid Paradise",
+//         description: "Exotic orchids for sophisticated elegance",
+//         image: "/images/home/placeholder.webp"
+//     },
+//     {
+//         id: 2,
+//         title: "Sunshine Collection",
+//         description: "Bright and cheerful sunflower arrangements",
+//         image: "/images/home/placeholder.webp"
+//     },
+//     {
+//         id: 3,
+//         title: "Premium Bouquets",
+//         description: "Handcrafted luxury arrangements",
+//         image: "/images/home/placeholder.webp"
+//     },
+//     {
+//         id: 4,
+//         title: "Spring Bloom",
+//         description: "Fresh seasonal flowers from our gardens",
+//         image: "/images/home/placeholder.webp"
+//     },
+//     {
+//         id: 5,
+//         title: "Graceful Lilies",
+//         description: "Pure and elegant lily compositions",
+//         image: "/images/home/placeholder.webp"
+//     }
+// ];
 
 const fadeInUp = {
     initial: { opacity: 0, y: 30 },
@@ -56,7 +57,7 @@ const staggerContainer = {
     }
 };
 
-export default function Collections() {
+export default function Collections({ collections }: { collections: Collection[] }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isMobile, setIsMobile] = useState(false);
 
@@ -70,7 +71,7 @@ export default function Collections() {
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
-    const totalItems = COLLECTIONS.length;
+    const totalItems = collections.length;
     const visibleCards = isMobile ? 1 : 3;
     const maxIndex = totalItems - visibleCards;
 
@@ -81,6 +82,16 @@ export default function Collections() {
     const prevSlide = () => {
         setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
     };
+
+    if (!collections || collections.length === 0) {
+        return (
+            <section className="w-full py-24 overflow-hidden">
+                <div className="container mx-auto px-6 text-center">
+                    <p className="text-gray-500">No collections found.</p>
+                </div>
+            </section>
+        );
+    }
 
     return (
         <section className="w-full py-24 overflow-hidden">
@@ -114,7 +125,7 @@ export default function Collections() {
                                 transform: `translateX(-${currentIndex * (100 / visibleCards)}%)`
                             }}
                         >
-                            {COLLECTIONS.map((item) => (
+                            {collections.map((item) => (
                                 <motion.div
                                     key={item.id}
                                     variants={fadeInUp}
@@ -124,8 +135,8 @@ export default function Collections() {
                                         {/* Image Container */}
                                         <div className="relative aspect-[4/5] overflow-hidden rounded-xl mb-6 bg-muted">
                                             <Image
-                                                src={item.image}
-                                                alt={item.title}
+                                                src={item.thumbnail || '/images/home/placeholder.webp'}
+                                                alt={item.name}
                                                 className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
                                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                                 fill
@@ -134,7 +145,7 @@ export default function Collections() {
 
                                         {/* Text Content */}
                                         <h3 className="text-2xl font-cormorant font-medium text-foreground mb-2">
-                                            {item.title}
+                                            {item.name}
                                         </h3>
                                         <p className="text-sm font-medium text-foreground leading-relaxed">
                                             {item.description}

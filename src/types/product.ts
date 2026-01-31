@@ -1,14 +1,15 @@
 export interface Product {
     id: string;
-    category: string;
-    title: string;
+    categoryName: string;
+    name: string;
     price: number;
+    thumbnail: string;
     image: string;
 }
 
 export interface ProductInfo {
     category: string;
-    title: string;
+    name: string;
     price: number;
     rating: number;
     reviewCount: number;

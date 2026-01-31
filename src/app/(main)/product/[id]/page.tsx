@@ -5,6 +5,7 @@ import ProductGallery from '@/components/features/product/ProductGallery';
 import ProductInfo from '@/components/features/product/ProductInfo';
 import CustomOrderCTA from '@/components/features/product/CustomOrderCTA';
 import ProductReviews from '@/components/features/product/ProductReviews';
+import { getProductDetail } from '@/services/product';
 
 // Mock data based on the provided design
 const MOCK_PRODUCT = {
@@ -33,9 +34,12 @@ const MOCK_PRODUCT = {
 import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 
-export default function ProductDetailPage() {
+export default function ProductDetailPage({ params }: { params: { id: string } }) {
     const router = useRouter();
+    const { id } = params;
 
+    const product = getProductDetail(id);
+    console.log(product);
     return (
         <main className="min-h-screen pt-32 pb-24">
             <div className="container mx-auto px-6">
