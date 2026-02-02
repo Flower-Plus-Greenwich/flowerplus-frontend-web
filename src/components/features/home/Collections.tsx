@@ -83,11 +83,14 @@ export default function Collections({ collections }: { collections: Collection[]
         setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
     };
 
+    // Empty collections message
     if (!collections || collections.length === 0) {
         return (
             <section className="w-full py-24 overflow-hidden">
                 <div className="container mx-auto px-6 text-center">
-                    <p className="text-gray-500">No collections found.</p>
+                    <p 
+                        className="font-cormorant text-4xl font-medium text-gray-600"
+                    >No collections found.</p>
                 </div>
             </section>
         );
@@ -140,6 +143,7 @@ export default function Collections({ collections }: { collections: Collection[]
                                                 className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
                                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                                 fill
+                                                loading="eager"
                                             />
                                         </div>
 

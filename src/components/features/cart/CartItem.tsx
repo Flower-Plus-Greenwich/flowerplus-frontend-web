@@ -41,7 +41,7 @@ export default function CartItem({
             <div className="relative w-24 h-24 aspect-square overflow-hidden bg-muted">
                 <Image
                     src={item.image}
-                    alt={item.title}
+                    alt={item.name}
                     fill
                     className="object-cover"
                 />
@@ -51,10 +51,10 @@ export default function CartItem({
             <div className="flex-1 flex flex-col justify-between py-1">
                 <div>
                     <h3 className="text-lg font-cormorant text-foreground leading-tight">
-                        {item.title}
+                        {item.name}
                     </h3>
                     <p className="text-xs text-foreground/50 font-montserrat uppercase tracking-wider mt-1">
-                        {item.category}
+                        {item.categoryName}
                     </p>
                 </div>
 

@@ -25,16 +25,17 @@ const staggerContainer = {
 function QuickCategoryItem({ category }: { category: QuickCategory }) {
     const products = category.products.slice(0, 3);
 
-    // console.log(products.length);
+    // console.log(products);
 
+    // No products found
     if (products.length === 0) return (
-        <div className="mb-20">
+        <div className="mb-30">
             <motion.div
                 variants={fadeInUp}
                 initial="initial"
                 whileInView="animate"
                 viewport={{ once: true }}
-                className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12"
+                className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-20"
             >
                 <div>
                     <h2
@@ -47,28 +48,52 @@ function QuickCategoryItem({ category }: { category: QuickCategory }) {
                     <Link
                         href={`/shop?category=${category.slug}`}
                         className="
-                        group flex items-center gap-2 text-sm font-medium 
-                        tracking-widest uppercase text-foreground/80 hover:text-primary 
-                        transition-colors duration-300 cursor-pointer"
+                            group flex items-center gap-2 text-sm font-medium 
+                            tracking-widest uppercase text-foreground/80 hover:text-primary 
+                            transition-colors duration-300 cursor-pointer
+                        "
                     >
                         View all products
-                        <span className="w-8 h-[1px] bg-foreground/20 group-hover:bg-primary group-hover:w-12 transition-all duration-300" />
+                        <span 
+                            className="
+                                w-8 h-[1px] bg-foreground/20 group-hover:bg-primary 
+                                group-hover:w-12 transition-all duration-300
+                            "
+                        />
                     </Link>
                 </ClientOnly>
             </motion.div>
 
-            <p>No products found</p>
+            <motion.div
+                variants={fadeInUp}
+                initial="initial"
+                whileInView="animate"
+                viewport={{ once: true }}
+                className="relative w-full h-[1px] bg-foreground/20"
+            >
+                <ClientOnly>
+                    <p 
+                        className="
+                            absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
+                            text-center font-cormorant text-4xl font-medium text-gray-600 
+                            bg-white px-8
+                        "
+                    >No products found</p>
+                </ClientOnly>
+            </motion.div>
         </div>
     );
 
     return (
         <div className="mb-20">
+
+            {/* Header */}
             <motion.div
                 variants={fadeInUp}
                 initial="initial"
                 whileInView="animate"
                 viewport={{ once: true }}
-                className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12"
+                className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-20"
             >
                 <div>
                     <h2
@@ -91,6 +116,7 @@ function QuickCategoryItem({ category }: { category: QuickCategory }) {
                 </ClientOnly>
             </motion.div>
 
+            {/* Products */}
             <motion.div
                 variants={staggerContainer}
                 initial="initial"
@@ -104,27 +130,31 @@ function QuickCategoryItem({ category }: { category: QuickCategory }) {
                         variants={fadeInUp}
                         className="group cursor-pointer"
                     >
-                        <div className="relative aspect-[3/4] overflow-hidden rounded-xl mb-4 bg-muted">
-                            <Image
-                                src={product.thumbnail || "/images/home/placeholder.webp"}
-                                alt={product.name}
-                                fill
-                                unoptimized
-                                className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
-                            />
-                        </div>
+                        <Link href={`/product/${product.id}`}>
+                            <div className="relative aspect-[3/4] overflow-hidden rounded-xl mb-4 bg-muted">
+                                <Image
+                                    src={product.thumbnail || "/images/home/placeholder.webp"}
+                                    alt={product.name}
+                                    fill
+                                    unoptimized
+                                    loading="eager"
+                                    className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
+                                />
+                            </div>
 
-                        <div className="flex flex-col gap-1">
-                            <span className="text-[10px] tracking-widest uppercase text-foreground/40 font-bold">
-                                {product.categoryName}
-                            </span>
-                            <h3 className="text-xl font-cormorant text-foreground group-hover:text-primary transition-colors">
-                                {product.name}
-                            </h3>
-                            <span className="text-base font-light text-foreground/80">
-                                ${product.price}
-                            </span>
-                        </div>
+                            <div className="flex flex-col gap-1">
+                                <span className="text-[10px] tracking-widest uppercase text-foreground/40 font-bold">
+                                    {product.categoryName}
+                                </span>
+                                <h3 className="text-xl font-cormorant text-foreground group-hover:text-primary transition-colors">
+                                    {product.name}
+                                </h3>
+                                <span className="text-base font-light text-foreground/80">
+                                    ${product.price}
+                                </span>
+                            </div>
+                        </Link>
+
                     </motion.div>
                 ))}
             </motion.div>

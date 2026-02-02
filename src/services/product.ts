@@ -23,38 +23,38 @@ export async function getProducts() {
 /**
  * Get birthday products
  */
-export async function getBirthdayProducts() {
-    const response = await dataFetcher(`${process.env.BACKEND_URL}/products?categorySlug=sinh-nhat&page=1&size=5&sort=newest`, 
-        { revalidate: 60 }
-    );
+// export async function getBirthdayProducts() {
+//     const response = await dataFetcher(`${process.env.BACKEND_URL}/products?categorySlug=sinh-nhat&page=1&size=5&sort=newest`, 
+//         { revalidate: 60 }
+//     );
 
-    let data = [];
+//     let data = [];
 
-    if (response?.headers.get('Content-Type') === 'application/json') {
-        const jsonData = await response?.json();
-        data = jsonData?.data;
-    }
+//     if (response?.headers.get('Content-Type') === 'application/json') {
+//         const jsonData = await response?.json();
+//         data = jsonData?.data;
+//     }
 
-    return data;
-}
+//     return data;
+// }
 
 /**
  * Get valentine products
  */
-export async function getValentineProducts() {
-    const response = await dataFetcher(`${process.env.BACKEND_URL}/products?categorySlug=tinh-yeu&page=1&size=5&sort=newest`, 
-        { revalidate: 60 }
-    );
+// export async function getValentineProducts() {
+//     const response = await dataFetcher(`${process.env.BACKEND_URL}/products?categorySlug=tinh-yeu&page=1&size=5&sort=newest`, 
+//         { revalidate: 60 }
+//     );
 
-    let data = [];
+//     let data = [];
 
-    if (response?.headers.get('Content-Type') === 'application/json') {
-        const jsonData = await response?.json();
-        data = jsonData?.data;
-    }
+//     if (response?.headers.get('Content-Type') === 'application/json') {
+//         const jsonData = await response?.json();
+//         data = jsonData?.data;
+//     }
 
-    return data;
-}
+//     return data;
+// }
 
 /**
  * Get wedding products

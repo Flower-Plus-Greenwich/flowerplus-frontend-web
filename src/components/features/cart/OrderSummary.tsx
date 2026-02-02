@@ -3,6 +3,7 @@
 import React from 'react';
 import { useEffect } from 'react';
 import { Check, Tag } from 'lucide-react';
+import ClientOnly from '@/components/common/ClientOnly';
 
 interface OrderSummaryProps {
     subtotal: number;
@@ -43,26 +44,28 @@ export default function OrderSummary({
                     <label className="text-sm text-foreground/80 font-montserrat">Voucher Code</label>
                     <div className="flex gap-1">
 
-                        <div 
-                            className="
-                                relative bg-background flex items-center justify-center flex-1
-                                border-2 border-border
-                            "
-                        >
-                            <input
-                                type="text"
-                                placeholder="Enter code"
-                                value={code}
-                                onChange={(e) => setCode(e.target.value)}
+                        <ClientOnly>    
+                            <div 
                                 className="
-                                    w-full border-none px-4 py-3 pl-12 text-sm focus:ring-1 
-                                    focus:ring-primary/20 outline-none font-montserrat
+                                    relative bg-background flex items-center justify-center flex-1
+                                    border-2 border-border
                                 "
-                            />
-                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/80">
-                                <Tag className="w-4 h-4 " />
+                            >
+                                <input
+                                    type="text"
+                                    placeholder="Enter code"
+                                    value={code}
+                                    onChange={(e) => setCode(e.target.value)}
+                                    className="
+                                        w-full border-none px-4 py-3 pl-12 text-sm focus:ring-1 
+                                        focus:ring-primary/20 outline-none font-montserrat
+                                    "
+                                />
+                                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/80">
+                                    <Tag className="w-4 h-4 " />
+                                </div>
                             </div>
-                        </div>
+                        </ClientOnly>
 
                         <button
                             onClick={() => onApplyVoucher(code)}
@@ -102,12 +105,14 @@ export default function OrderSummary({
                     <span className="text-2xl font-montserrat font-medium">${total.toFixed(2)}</span>
                 </div>
 
-                <button className="
-                    w-full bg-[#5C4B43] text-white py-4 rounded-sm font-montserrat 
-                    text-sm tracking-widest hover:bg-[#4A3D37] transition-colors uppercase cursor-pointer
-                ">
-                    Proceed to Checkout
-                </button>
+                <ClientOnly>
+                    <button className="
+                        w-full bg-primary text-white py-4 rounded-sm font-montserrat text-sm
+                        tracking-widest hover:bg-primary/80 transition-colors uppercase cursor-pointer
+                    ">
+                        Proceed to Checkout
+                    </button>
+                </ClientOnly>
 
                 <p className="text-xs text-foreground text-center mt-4 font-montserrat">
                     Taxes and shipping calculated at checkout

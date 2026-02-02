@@ -91,7 +91,9 @@ export default function Selection({ products }: { products: Product[] }) {
         return (
             <section className="w-full py-24 bg-white">
                 <div className="container mx-auto px-6 text-center">
-                    <p className="text-gray-500">No products available at the moment.</p>
+                    <p 
+                        className="font-cormorant text-4xl font-medium text-gray-600 "
+                    >No products available at the moment.</p>
                 </div>
             </section>
         );
