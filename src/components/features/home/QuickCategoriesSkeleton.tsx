@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function QuickCategoriesSkeleton() {
     return (
-        <section className="w-full py-24 bg-gray-50">
+        <section className="w-full py-24 bg-primary/10">
             <div className="container mx-auto px-6">
                 <div className="mt-12">
                     {/* Simulate 3 quick categories */}

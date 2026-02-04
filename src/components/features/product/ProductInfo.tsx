@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Star, Minus, Plus, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ClientOnly from '@/components/common/ClientOnly';
@@ -28,19 +28,19 @@ export default function ProductInfo({
     careInstructions = ['No care instructions found'],
     deliveryInfo = 'No delivery info found',
 }: ProductInfoProps) {
-    console.log(
-        {
-            category,
-            name,
-            price,
-            rating,
-            reviewCount,
-            description,
-            details,
-            careInstructions,
-            deliveryInfo,
-        }
-    )
+    // console.log(
+    //     {
+    //         category,
+    //         name,
+    //         price,
+    //         rating,
+    //         reviewCount,
+    //         description,
+    //         details,
+    //         careInstructions,
+    //         deliveryInfo,
+    //     }
+    // )
 
     const [quantity, setQuantity] = useState(1);
     const [expandedSection, setExpandedSection] = useState<string | null>('details');
@@ -136,7 +136,7 @@ export default function ProductInfo({
             </div>
 
             {/* Collapsible Sections */}
-            <div className="border-t border-border mt-4 c">
+            <div className="border-t border-border mt-4">
                 {[
                     { id: 'details', label: 'Details', content: details },
                     {
@@ -162,7 +162,10 @@ export default function ProductInfo({
                             </span>
                             <ChevronDown
                                 size={18}
-                                className={`transition-transform duration-300 ${expandedSection === section.id ? 'rotate-180' : ''}`}
+                                className={`
+                                    transition-transform duration-300 
+                                    ${expandedSection === section.id ? 'rotate-180' : ''}
+                                `}
                             />
                         </button>
                         <AnimatePresence>
