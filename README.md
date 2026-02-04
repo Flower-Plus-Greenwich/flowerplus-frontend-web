@@ -8,7 +8,6 @@ A modern, responsive frontend application for FlowerPlus, built with Next.js 16 
 - **Language**: TypeScript
 - **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
 - **Icons**: [Lucide React](https://lucide.dev/)
-- **HTTP Client**: Axios
 
 ## 📂 Project Structure
 
@@ -16,10 +15,13 @@ A modern, responsive frontend application for FlowerPlus, built with Next.js 16 
 src/
 ├── app/                  # App Router pages and layouts
 │   ├── (auth)/          # Authentication routes (login, register)
-│   ├── layout.tsx       # Root layout including fonts and global styles
-│   └── globals.css      # (Removed in favor of src/styles)
+│   ├── (main)/          # Main application routes (home, product, shop)
+│   └── layout.tsx       # Root layout including fonts and global styles
 ├── components/           # Reusable UI components
-│   └── common/          # Common components (e.g., ClientOnly)
+│   ├── common/          # Common components (e.g., ClientOnly, BackBtn)
+│   ├── features/        # Feature-specific components (e.g., product, home)
+│   ├── layout/          # Layout components (Header, Footer)
+│   └── ui/              # Generic UI components (e.g., Skeleton)
 ├── lib/                  # Library configurations (e.g., axios)
 ├── services/             # API service calls
 ├── styles/               # Global styles and theme configuration
@@ -39,7 +41,7 @@ src/
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Flower-Plus-Greenwich/flowerplus-frontend-web.git
    ```
 
 2. Navigate to the project directory:
@@ -64,6 +66,12 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## 🎨 Features
 
+- **Storefront**:
+  - **Homepage**: Hero section with reveal effect, curated collections, and product highlights.
+  - **Product Details**: Comprehensive product view with gallery, details, and care instructions.
+- **Micro-interactions & UX**:
+  - **Loading States**: Skeleton screens for instant visual feedback.
+  - **Animations**: Smooth page transitions and interactive elements.
 - **Authentication**:
   - Login Page with social auth UI.
   - Register Page with form validation fields.

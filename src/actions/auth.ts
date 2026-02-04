@@ -1,24 +1,18 @@
 'use server';
 
-import { axiosBackend } from "@/lib/axios";
-import { loginSchema, registerSchema, forgotPasswordSchema } from "@/lib/auth/schemas";
-import { setAuthCookies, clearAuthCookies, setAccessToken } from '@/lib/auth/tokens'
+import { actionFetcher } from "@/lib/fetcher";
+import { loginSchema, registerSchema, forgotPasswordSchema } from "@/lib/schemas";
+import { setAuthCookies, clearAuthCookies, getRefreshToken, setAccessToken } from '@/lib/tokens';
 import { ActionState } from "@/types";
-import { redirect } from "next/navigation";
-
 
 /** 
  * Server action for login
- * @param prevState - Previous state
- * @param formData - Form data
- * @returns Action state - { success, data, errors, message }
  */
 export async function loginAction(prevState: ActionState, formData: FormData): Promise<ActionState> {
 
     const rawData = Object.fromEntries(formData);
     const validatedFields = loginSchema.safeParse(rawData);
 
-    // Validation failed    
     if (!validatedFields.success) {
         return {
             success: false,
@@ -29,34 +23,55 @@ export async function loginAction(prevState: ActionState, formData: FormData): P
 
     const { email, password } = validatedFields.data;
 
-    // Call backend API 
     try {
-        const response = await axiosBackend.post('/auth/login', { 
-            email,
-            password 
+        const response = await actionFetcher('/auth/login', {
+            body: JSON.stringify({ email, password }),
+            skipAuth: true, // Skip authorization for login
         });
 
-        const { data = {}, message } = response?.data || {};
-        const { accessToken, refreshToken } = data;
+        // console.log(response)
+
+        if (response?.headers.get('Content-Type') !== 'application/json') {
+            return {
+                success: false,
+                message: `${response?.status} ${response?.statusText}: Invalid response from server, expected JSON response`,
+            };
+        }
+
+        const jsonData = await response?.json();
+        // console.log(jsonData)
+
+        if (!response?.ok) {
+            return {
+                success: false,
+                message: `${response?.status} ${response?.statusText}: ${jsonData?.message ||
+                    jsonData?.error?.message || "Login failed"}`,
+            };
+        }
+
+        const { accessToken, refreshToken } = jsonData.data || {};
+
+        if (!accessToken || !refreshToken) {
+            return {
+                success: false,
+                message: "Invalid response from server, missing access token or refresh token",
+            };
+        }
 
         // Set cookies for client
         await setAuthCookies(accessToken, refreshToken);
 
-        // redirect("/login/success");
-        
         return {
             success: true,
-            data: data,
-            message: message || "Login successful",
+            data: jsonData.data,
+            message: jsonData.message || "Login successful",
         };
-        
-    } catch (AxiosError: any) {
-        const { error = {} } = AxiosError?.response?.data?.error || {}
-        console.error("Login failed:", AxiosError.toString());
-        const errorMessage = AxiosError?.message + ": " + error?.message || "Invalid credentials";
+
+    } catch (fetchError: any) {
+        console.error("Login failed:", fetchError);
         return {
             success: false,
-            message: errorMessage,
+            message: fetchError.message || "An unexpected error occurred",
         };
     }
 }
@@ -64,16 +79,12 @@ export async function loginAction(prevState: ActionState, formData: FormData): P
 
 /** 
  * Server action for register
- * @param prevState - Previous state
- * @param formData - Form data
- * @returns Action state - { success, data, errors, message }
- */ 
+ */
 export async function registerAction(prevState: ActionState, formData: FormData): Promise<ActionState> {
 
     const rawData = Object.fromEntries(formData);
     const validatedFields = registerSchema.safeParse(rawData);
 
-    // Validation failed    
     if (!validatedFields.success) {
         return {
             success: false,
@@ -84,58 +95,58 @@ export async function registerAction(prevState: ActionState, formData: FormData)
 
     const { firstName, lastName, email, password, confirmPassword } = validatedFields.data;
 
-    return {
-        success: true,
-        message: "Registration successful",
-    };
-    
-    // Call backend API 
-    // try {
-    //     const response = await axiosBackend.post('/auth/register', {
-    //         firstName,
-    //         lastName,
-    //         email,
-    //         password,
-    //         confirmPassword
-    //     });
+    try {
+        const response = await actionFetcher('/auth/register', {
+            body: JSON.stringify({
+                firstName,
+                lastName,
+                email,
+                password,
+                confirmPassword
+            }),
+            skipAuth: true,
+        });
 
-    //     /**
-    //      * It's not necessary to set cookies here and send any data to the client 
-    //      * Because the user is not logged in yet
-    //      */
-    //     console.log(response)
+        // Check if response is JSON
+        if (response?.headers.get('Content-Type') !== 'application/json') {
+            return {
+                success: false,
+                message: `${response?.status} ${response?.statusText}: Invalid response from server, expected JSON response`,
+            };
+        }
 
-    //     const { message } = response?.data || {};
+        const jsonData = await response?.json();
 
-    //     return {
-    //         success: true,
-    //         message: message || "Registration successful",
-    //     };
+        if (!response?.ok) {
+            return {
+                success: false,
+                message: jsonData?.message || jsonData?.error?.message || "Registration failed",
+            };
+        }
 
-    // } catch (error: any) {
-    //     console.log(error)
-    //     console.error("Registration failed:", error.response?.data || error?.message);
-    //     const errorMessage = error?.message + ": " + error?.response?.data?.error?.message;
-    //     return {
-    //         success: false,
-    //         message: errorMessage,
-    //     };
-    // }
+        return {
+            success: true,
+            message: jsonData.message || "Registration successful",
+        };
+
+    } catch (error: any) {
+        console.error("Registration failed:", error);
+        return {
+            success: false,
+            message: error.message || "Registration failed",
+        };
+    }
 }
 
 
 /** 
  * Server action for forgot password
- * @param prevState - Previous state
- * @param formData - Form data
- * @returns Action state - { success, data, errors, message }
- */ 
+ */
 export async function forgotPasswordAction(prevState: ActionState, formData: FormData): Promise<ActionState> {
 
     const rawData = Object.fromEntries(formData);
     const validatedFields = forgotPasswordSchema.safeParse(rawData);
 
-    // Validation failed    
     if (!validatedFields.success) {
         return {
             success: false,
@@ -146,23 +157,32 @@ export async function forgotPasswordAction(prevState: ActionState, formData: For
 
     const { email } = validatedFields.data;
 
-    // Call backend API 
     try {
-        const response = await axiosBackend.post('/auth/forgot-password', { email });
+        const response = await actionFetcher('/auth/forgot-password', {
+            body: JSON.stringify({ email }),
+            skipAuth: true,
+        });
+
+        const data = await response?.json();
+
+        if (!response?.ok) {
+            return {
+                success: false,
+                message: data.message || "Failed to send reset instructions",
+            };
+        }
 
         return {
             success: true,
-            data: { ...response.data, email }, // Include email in response data
-            message: response.data.message || "Password reset instructions sent to your email",
+            data: { ...data, email },
+            message: data.message || "Password reset instructions sent to your email",
         };
 
     } catch (error: any) {
-        console.error("Forgot password failed:", error.response?.data || error?.message);
-        const errorMessage = error.response?.data?.message ||
-            error?.message + ": Failed to send reset instructions";
+        console.error("Forgot password failed:", error);
         return {
             success: false,
-            message: errorMessage,
+            message: error.message || "Failed to send reset instructions",
         };
     }
 }
@@ -170,16 +190,15 @@ export async function forgotPasswordAction(prevState: ActionState, formData: For
 
 /** 
  * Server action for logout
- * @returns Action state - { success, message }
  */
 export async function logoutAction(): Promise<ActionState> {
     try {
-        // Clear cookies first
+        // Clear cookies
         await clearAuthCookies();
 
-        // Call backend logout endpoint
+        // Attempt to notify backend
         try {
-            await axiosBackend.post('/auth/logout');
+            await actionFetcher('/auth/logout', {});
         } catch (error) {
             console.warn('Backend logout failed, but cookies cleared:', error);
         }
@@ -199,14 +218,37 @@ export async function logoutAction(): Promise<ActionState> {
 
 
 /** 
- * Server action for refresh token
- * @returns Action state - { success, message }
+ * Server action for refresh token (Explicit call)
  */
 export async function refreshTokenAction(): Promise<ActionState> {
     try {
-        const response = await axiosBackend.post('/auth/refresh');
-        const { accessToken } = response.data.data;
-        setAccessToken(accessToken);
+        const refreshToken = await getRefreshToken();
+        if (!refreshToken) {
+            return {
+                success: false,
+                message: "No refresh token available",
+            };
+        }
+
+        const response = await actionFetcher('/auth/refresh', {
+            body: JSON.stringify({ refreshToken }),
+            skipAuth: true, // Skip authorization header because we are sending refresh token
+        });
+
+        const data = await response?.json();
+        
+        if (!response?.ok) {
+            return {
+                success: false,
+                message: "Refresh token failed",
+            };
+        }
+
+        const { accessToken } = data.data || data;
+        if (accessToken) {
+            await setAccessToken(accessToken);
+        }
+
         return {
             success: true,
             message: "Refresh token successful",
