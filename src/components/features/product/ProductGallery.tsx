@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import ClientOnly from '@/components/common/ClientOnly';
 
 interface ProductGalleryProps {
     images: string[];
@@ -52,54 +53,60 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
                             rotateY: { type: 'spring', stiffness: 500, damping: 200 },
                             opacity: { duration: 0.5 },   
                         }}
-                        className="relative w-full h-full"
                         style={{ backfaceVisibility: 'hidden' }}
+                        className="relative w-full h-full"
                     >
                         <Image
-                            src={images[activeIndex]}
+                            src={images[activeIndex] || '/images/home/placeholder.webp'}
                             alt={`Product image ${activeIndex + 1}`}
                             fill
                             className="object-cover"
                             priority
+                            unoptimized
+                            loading='eager'
                             sizes="(max-width: 768px) 100vw, 50vw"
                         />
                     </motion.div>
                 </AnimatePresence>
 
                 {/* Navigation Buttons */}
-                <div className="
-                    absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between z-10 opacity-0 
-                    group-hover:opacity-100 transition-opacity duration-300 pointer-events-none
-                ">
-                    <button
-                        onClick={() => paginate(-1)}
-                        className="
-                            p-2 rounded-full bg-white/80 backdrop-blur-sm text-foreground 
-                            hover:bg-white transition-all shadow-md pointer-events-auto cursor-pointer
-                        "
-                        aria-label="Previous image"
-                    >
-                        <ChevronLeft size={24} />
-                    </button>
-                    <button
-                        onClick={() => paginate(1)}
-                        className="
-                            p-2 rounded-full bg-white/80 backdrop-blur-sm text-foreground 
-                            hover:bg-white transition-all shadow-md pointer-events-auto cursor-pointer
-                        "
-                        aria-label="Next image"
-                    >
-                        <ChevronRight size={24} />
-                    </button>
-                </div>
+                <ClientOnly>
+                    <div className="
+                        absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between z-10 opacity-0 
+                        group-hover:opacity-100 transition-opacity duration-300 pointer-events-none
+                    ">
+                        <button
+                            onClick={() => paginate(-1)}
+                            className="
+                                p-2 rounded-full bg-white/80 backdrop-blur-sm text-foreground 
+                                hover:bg-white transition-all shadow-md pointer-events-auto cursor-pointer
+                            "
+                            aria-label="Previous image"
+                        >
+                            <ChevronLeft size={24} />
+                        </button>
+                        <button
+                            onClick={() => paginate(1)}
+                            className="
+                                p-2 rounded-full bg-white/80 backdrop-blur-sm text-foreground 
+                                hover:bg-white transition-all shadow-md pointer-events-auto cursor-pointer
+                            "
+                            aria-label="Next image"
+                        >
+                            <ChevronRight size={24} />
+                        </button>
+                    </div>
+                </ClientOnly>
 
                 {/* Image Counter */}
-                <div className="
-                    absolute bottom-4 right-4 px-3 py-1.5 bg-white/80 backdrop-blur-sm rounded-full 
-                    text-xs font-medium text-foreground z-10 transition-transform group-hover:scale-95
-                ">
-                    {activeIndex + 1} / {images.length}
-                </div>
+                <ClientOnly>
+                    <div className="
+                        absolute bottom-4 right-4 px-3 py-1.5 bg-white/80 backdrop-blur-sm rounded-full 
+                        text-xs font-medium text-foreground z-10 transition-transform group-hover:scale-95
+                    ">
+                        {activeIndex + 1} / {images.length}
+                    </div>
+                </ClientOnly>
             </div>
 
             {/* Thumbnails */}
@@ -118,8 +125,10 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
                     >
                         <Image
                             src={img}
-                            alt={`Thumbnail ${index + 1}`}
+                            alt={`Thumbnail ${index + 1}` || '/images/home/placeholder.webp'}
                             fill
+                            unoptimized
+                            loading='eager'
                             className="object-cover cursor-pointer"
                             sizes="96px"
                         />

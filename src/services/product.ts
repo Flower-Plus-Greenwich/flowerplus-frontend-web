@@ -100,7 +100,8 @@ export async function getProductDetail(id: string) {
     let data = [];
 
     if (response?.headers.get('Content-Type') === 'application/json') {
-        data = await response?.json();
+        const jsonData = await response?.json();
+        data = jsonData?.data;
     }
 
     // console.log(data);

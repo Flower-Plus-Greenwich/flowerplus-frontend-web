@@ -22,7 +22,7 @@ export default async function Home() {
   // Get list of products
   const products = await getProducts();
 
-  // Selected ids of quick categories
+  // Selected ids for quick categories
   const quickCategoriesIds = [
     "803840093723525354", // Birthday
     "803840094134582297", // Valentine

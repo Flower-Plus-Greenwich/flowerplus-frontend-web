@@ -1,17 +1,17 @@
-'use client';
 
-import React from 'react';
 import ProductGallery from '@/components/features/product/ProductGallery';
 import ProductInfo from '@/components/features/product/ProductInfo';
 import CustomOrderCTA from '@/components/features/product/CustomOrderCTA';
 import ProductReviews from '@/components/features/product/ProductReviews';
+import BackBtn from '@/components/common/BackBtn';
+
+import { Suspense } from 'react';
 import { getProductDetail } from '@/services/product';
 
-// Mock data based on the provided design
 const MOCK_PRODUCT = {
     id: '1',
     category: 'PREMIUM',
-    title: 'Pink Peony Dreams',
+    name: 'Pink Peony Dreams',
     price: 110,
     rating: 4.7,
     reviewCount: 3,
@@ -31,31 +31,88 @@ const MOCK_PRODUCT = {
     ],
 };
 
-import { useRouter } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
+// {
+//   id: '803840097485824082',
+//   name: 'Bó Hoa Yêu Thương Nồng Cháy',
+//   slug: 'bo-hoa-yeu-thuong-nong-chay',
+//   description: '99 đóa hồng đỏ thắm tượng trưng cho tình yêu vĩnh cửu.',
+//   careInstruction: 'Cắt gốc 45 độ, thay nước mỗi ngày.',
+//   basePrice: 1200000,
+//   primaryCategory: { id: '803840094134582297', categoryName: 'Tình Yêu' },
+//   categories: [
+//     { id: '803840094134582297', categoryName: 'Tình Yêu' },
+//     { id: '803840094562388332', categoryName: 'Hoa Hồng' }
+//   ],
+//   status: 'ACTIVE',
+//   assets: [
+//     {
+//       id: '1',
+//       url: 'https://placehold.co/600x600?text=Rose+99',
+//       publicId: 'seed_98a88257',
+//       type: 'IMAGE',
+//       isThumbnail: true,
+//       position: 0,
+//       metaData: null
+//     },
+//     {
+//       id: '2',
+//       url: 'https://placehold.co/600x600?text=Rose+Detail',
+//       publicId: 'seed_40414484',
+//       type: 'IMAGE',
+//       isThumbnail: false,
+//       position: 1,
+//       metaData: null
+//     }
+//   ],
+//   thumbnail: 'https://placehold.co/600x600?text=Rose+99',
+//   weight: 500,
+//   length: 60,
+//   width: 40,
+//   height: 20,
+//   isSeasonalPriority: null,
+//   premakeInstruction: null,
+//   isMakeToOrder: false,
+//   inStock: true,
+//   averageRating: 0,
+//   reviewCount: 0
+// }
 
-export default function ProductDetailPage({ params }: { params: { id: string } }) {
-    const router = useRouter();
-    const { id } = params;
+export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    let product = await getProductDetail(id);
 
-    const product = getProductDetail(id);
-    console.log(product);
+    const productImages = product.assets?.map((asset: { url: string }) => asset.url) || [];
+
+    // console.log(product);
+    product = {
+        ...product,
+        category: product?.primaryCategory?.categoryName || "No category found",
+        careInstructions: product?.careInstruction?.split(', ') || [],
+        price: product?.basePrice || 0,
+        rating: product?.averageRating || 0,
+        reviewCount: product?.reviewCount || 0,
+        description: product?.description || "No description found",
+        details: product?.premakeInstruction || "No details found",
+        deliveryInfo: product?.deliveryInfo || "No delivery info found",
+    }
+
+    // console.log(product);
+
     return (
         <main className="min-h-screen pt-32 pb-24">
             <div className="container mx-auto px-6">
                 {/* Back Button */}
-                <button
-                    onClick={() => router.back()}
-                    className="flex items-center gap-2 text-foreground/80 hover:text-primary transition-colors mb-8 group cursor-pointer"
-                >
-                    <ArrowLeft size={20} className="transition-transform group-hover:-translate-x-1" />
-                    <span className="text-sm font-medium">Go Back</span>
-                </button>
+                <BackBtn />
 
                 {/* Product Detail Section */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-24 mb-24">
-                    <ProductGallery images={MOCK_PRODUCT.images} />
-                    <ProductInfo {...MOCK_PRODUCT} />
+                    <Suspense fallback={<div>Loading product gallery...</div>}>
+                        <ProductGallery images={productImages} />
+                    </Suspense>
+
+                    <Suspense fallback={<div>Loading product info...</div>}>
+                        <ProductInfo {...product} />
+                    </Suspense>
                 </div>
 
                 {/* Custom Order CTA */}

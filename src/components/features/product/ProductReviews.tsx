@@ -3,15 +3,8 @@
 import React, { useState } from 'react';
 import { Star, Pencil, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-
-interface Review {
-    id: number;
-    userName: string;
-    rating: number;
-    date: string;
-    content: string;
-    isVerified: boolean;
-}
+import ClientOnly from '@/components/common/ClientOnly';
+import { Review } from '@/types/product';
 
 const MOCK_REVIEWS: Review[] = [
     {
@@ -73,13 +66,15 @@ export default function ProductReviews() {
                                 className="w-full h-32 p-4 bg-[#fcf9f6] border border-border/50 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/30 transition-shadow resize-none text-sm"
                             />
                         </div>
-
-                        <button className="
-                            px-8 py-3 bg-primary/80 text-white text-sm font-medium rounded-lg 
-                            shadow-sm hover:bg-primary transition-colors cursor-pointer
-                        ">
-                            Submit Review
-                        </button>
+                        
+                        <ClientOnly>
+                            <button className="
+                                px-8 py-3 bg-primary/80 text-white text-sm font-medium rounded-lg 
+                                shadow-sm hover:bg-primary transition-colors cursor-pointer
+                            ">
+                                Submit Review
+                            </button>
+                        </ClientOnly>
                     </div>
                 </div>
 

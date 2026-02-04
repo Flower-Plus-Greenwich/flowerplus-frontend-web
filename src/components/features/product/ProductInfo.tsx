@@ -3,10 +3,11 @@
 import React, { useState } from 'react';
 import { Star, Minus, Plus, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import ClientOnly from '@/components/common/ClientOnly';
 
 interface ProductInfoProps {
     category: string;
-    title: string;
+    name: string;
     price: number;
     rating: number;
     reviewCount: number;
@@ -17,16 +18,30 @@ interface ProductInfoProps {
 }
 
 export default function ProductInfo({
-    category,
-    title,
-    price,
-    rating,
-    reviewCount,
-    description,
-    details,
-    careInstructions,
-    deliveryInfo,
+    category = 'Unknown category',
+    name = 'No name found',
+    price = 0,
+    rating = 0,
+    reviewCount = 0,
+    description = 'No description found',
+    details = 'No details found',
+    careInstructions = ['No care instructions found'],
+    deliveryInfo = 'No delivery info found',
 }: ProductInfoProps) {
+    console.log(
+        {
+            category,
+            name,
+            price,
+            rating,
+            reviewCount,
+            description,
+            details,
+            careInstructions,
+            deliveryInfo,
+        }
+    )
+
     const [quantity, setQuantity] = useState(1);
     const [expandedSection, setExpandedSection] = useState<string | null>('details');
 
@@ -42,7 +57,7 @@ export default function ProductInfo({
                     {category}
                 </span>
                 <h1 className="text-4xl md:text-5xl font-cormorant text-foreground mb-4 font-medium">
-                    {title}
+                    {name}
                 </h1>
                 <div className="flex items-center gap-4 mb-4">
                     <div className="flex text-amber-500">
@@ -76,37 +91,48 @@ export default function ProductInfo({
                         Quantity
                     </span>
                     <div className="flex items-center border border-border rounded-lg overflow-hidden h-12">
-                        <button
-                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                            className="
-                                w-12 h-full flex items-center justify-center 
-                                hover:bg-black/5 transition-colors cursor-pointer
+                        <ClientOnly>
+                            <button
+                                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                                className="
+                                    w-12 h-full flex items-center justify-center 
+                                    hover:bg-black/5 transition-colors cursor-pointer
+                                "
+                            >
+                                <Minus size={16} />
+                            </button>
+                            
+                            <div 
+                                className="
+                                    w-12 h-full flex items-center justify-center text-sm font-medium 
+                                    border-x border-border
                             "
-                        >
-                            <Minus size={16} />
-                        </button>
-                        <div className="w-12 h-full flex items-center justify-center text-sm font-medium border-x border-border">
-                            {quantity}
-                        </div>
-                        <button
-                            onClick={() => setQuantity(quantity + 1)}
-                            className="
-                                w-12 h-full flex items-center justify-center 
-                                hover:bg-black/5 transition-colors cursor-pointer
-                            "
-                        >
-                            <Plus size={16} />
-                        </button>
+                            >
+                                {quantity}
+                            </div>
+                        
+                            <button
+                                onClick={() => setQuantity(quantity + 1)}
+                                className="
+                                    w-12 h-full flex items-center justify-center 
+                                    hover:bg-black/5 transition-colors cursor-pointer
+                                "
+                            >
+                                <Plus size={16} />
+                            </button>
+                        </ClientOnly>
                     </div>
                 </div>
 
-                <button className="
-                    w-full py-4 bg-primary text-white text-md font-medium 
-                    rounded-xl shadow-xl hover:bg-primary/90 transition-all 
-                    transform active:scale-[0.98] cursor-pointer
-                ">
-                    Add to Cart
-                </button>
+                <ClientOnly>
+                    <button className="
+                        w-full py-4 bg-primary text-white text-md font-medium 
+                        rounded-xl shadow-xl hover:bg-primary/90 transition-all 
+                        transform active:scale-[0.98] cursor-pointer
+                    ">
+                        Add to Cart
+                    </button>
+                </ClientOnly>
             </div>
 
             {/* Collapsible Sections */}
