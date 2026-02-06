@@ -4,17 +4,99 @@ import React, { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { cormorant, montserrat } from '@/components/ui/fonts';
 
-interface TrailPoint {
-    id: number;
-    x: number;
-    y: number;
-    age: number;
-    maxAge: number;
-    size: number;
+function HeroContent({ isRevealed = false }: { isRevealed?: boolean }) {
+  return (
+    <div className="container mx-auto px-6">
+      <div className="max-w-2xl">
+        {/* Tagline */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.2 }}
+          className="overflow-hidden mb-4"
+        >
+          <span
+            className={`
+                        block text-sm md:text-base tracking-[0.2em] uppercase
+                        ${isRevealed ? 'text-white font-bold' : 'text-foreground font-medium'}
+                    `}
+          >Welcome to FlowerPlus</span>
+        </motion.div>
+
+        {/* Main Title */}
+        <motion.h1
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.6 }}
+          className={`
+                    text-5xl md:text-7xl lg:text-8xl font-cormorant leading-[1.1] mb-8 
+                    ${isRevealed ? 'text-white font-bold' : 'text-foreground font-normal'}`
+          }>
+          Elegance in <br />
+          <i>Every Petal</i>
+        </motion.h1>
+
+        {/* Description */}
+        <motion.p
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.8 }}
+          className={`
+                    text-lg md:text-xl max-w-lg mb-10 leading-relaxed
+                    ${isRevealed ? 'text-white font-bold' : 'text-foreground'
+            }`}>
+          Discover our curated collection of exquisite floral arrangements,
+          handcrafted with care and artistry for life&apos;s most precious moments.
+        </motion.p>
+
+        {/* Action Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 1 }}
+          className="flex flex-wrap gap-4"
+        >
+          <Link
+            href="/shop"
+            className={`
+                        px-10 py-4 rounded-md transition-all transform hover:-translate-y-1 shadow-lg 
+                        ${isRevealed ?
+                'bg-white text-black font-bold' :
+                'bg-primary text-white font-medium hover:bg-primary/90'
+              }`}
+          >
+            Shop Now
+          </Link>
+          <Link
+            href="/collections"
+            className={`
+                        px-10 py-4 rounded-md border transition-all transform hover:-translate-y-1 
+                        ${isRevealed ?
+                'bg-white/20 border-white text-white font-bold' :
+                'bg-transparent border-primary text-primary font-medium hover:bg-primary/5'
+              }
+                    `}
+          >
+            View Collections
+          </Link>
+        </motion.div>
+      </div>
+    </div>
+  );
 }
 
 export default function Hero() {
+    interface TrailPoint {
+        id: number;
+        x: number;
+        y: number;
+        age: number;
+        maxAge: number;
+        size: number;
+    }
+  
     const containerRef = useRef<HTMLElement>(null);
     const [particles, setParticles] = useState<TrailPoint[]>([]);
 
@@ -28,13 +110,19 @@ export default function Hero() {
 
         const render = () => {
             // Easing: move eased position towards target position
-            const ease = 0.05;
+            const ease = 0.1;
             easedMouse.current.x += (targetMouse.current.x - easedMouse.current.x) * ease;
             easedMouse.current.y += (targetMouse.current.y - easedMouse.current.y) * ease;
 
             setParticles(prev => {
                 const nextParticles = prev
-                    .map(p => ({ ...p, age: p.age + 1, size: p.size * 0.985 }))
+                    .map(p => (
+                      {
+                        ...p,
+                        age: p.age + 1,
+                        size: p.size * 0.985
+                      }
+                    ))
                     .filter(p => p.size > 5 && p.age < p.maxAge);
 
                 // Emit new particle if mouse moved
@@ -71,91 +159,11 @@ export default function Hero() {
         };
     };
 
-    const HeroContent = ({ isRevealed = false }: { isRevealed?: boolean }) => (
-        <div className="container mx-auto px-6">
-            <div className="max-w-2xl">
-                {/* Tagline */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1, delay: 0.2 }}
-                    className="overflow-hidden mb-4"
-                >
-                    <span
-                        className={`
-                            block text-sm md:text-base tracking-[0.2em] uppercase
-                            ${isRevealed ? 'text-white font-bold' : 'text-foreground font-medium'}
-                        `}
-                    >Welcome to FlowerPlus</span>
-                </motion.div>
-
-                {/* Main Title */}
-                <motion.h1
-                    initial={{ opacity: 0, y: 40 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1, delay: 0.6 }}
-                    className={`
-                        text-5xl md:text-7xl lg:text-8xl font-cormorant leading-[1.1] mb-8 
-                        ${isRevealed ? 'text-white font-bold' : 'text-foreground font-normal'}`
-                    }>
-                    Elegance in
-                    <br />
-                    <span className="italic">Every Petal</span>
-                </motion.h1>
-
-                {/* Description */}
-                <motion.p
-                    initial={{ opacity: 0, y: 40 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1, delay: 0.8 }}
-                    className={`
-                        text-lg md:text-xl max-w-lg mb-10 leading-relaxed
-                        ${isRevealed ? 'text-white font-bold' : 'text-foreground'
-                    }`}>
-                    Discover our curated collection of exquisite floral arrangements,
-                    handcrafted with care and artistry for life&apos;s most precious moments.
-                </motion.p>
-
-                {/* Action Buttons */}
-                <motion.div
-                    initial={{ opacity: 0, y: 40 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1, delay: 1 }}
-                    className="flex flex-wrap gap-4"
-                >
-                    <Link
-                        href="/shop"
-                        className={`
-                            px-10 py-4 rounded-md transition-all transform hover:-translate-y-1 shadow-lg 
-                            ${isRevealed ?
-                                'bg-white text-black font-bold' :
-                                'bg-primary text-white font-medium hover:bg-primary/90'
-                            }`}
-                    >
-                        Shop Now
-                    </Link>
-                    <Link
-                        href="/collections"
-                        className={`
-                            px-10 py-4 rounded-md border transition-all transform hover:-translate-y-1 
-                            ${isRevealed ?
-                                'bg-white/20 border-white text-white font-bold' :
-                                'bg-transparent border-primary text-primary font-medium hover:bg-primary/5'
-                            }
-                        `}
-                    >
-                        View Collections
-                    </Link>
-                </motion.div>
-            </div>
-        </div>
-    );
-
     return (
         <section
             ref={containerRef}
             onMouseMove={handleMouseMove}
-            className="relative w-full h-[100vh] min-h-[600px] flex items-center overflow-hidden"
+            className="relative w-full h-screen min-h-150 flex items-center overflow-hidden"
         >
             {/* SVG mask definition */}
             <svg
@@ -185,14 +193,14 @@ export default function Hero() {
                     alt="Hero Background"
                     fill
                     priority
-                    className="object-cover "
+                    className="object-cover"
                 />
                 <div className="absolute inset-0 bg-white/60" />
             </div>
 
             {/* BASE LAYER CONTENT */}
-            <div className="absolute inset-0 z-[1] flex items-center pt-20">
-                <HeroContent />
+            <div className="absolute inset-0 z-1 flex items-center pt-20">
+              <HeroContent />
             </div>
 
             {/* REVEAL LAYER (Z-index higher than base content) */}
@@ -213,6 +221,7 @@ export default function Hero() {
                         className="object-cover"
                     />
                 </div>
+                
                 {/* Bold Content (Mirrored perfectly) */}
                 <div className="absolute inset-0 flex items-center pt-20">
                     <HeroContent isRevealed />

@@ -1,19 +1,7 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Montserrat } from "next/font/google";
+import { cormorant, montserrat } from "@/components/ui/fonts";
 import "../styles/globals.css";
 import { Toaster } from "sonner";
-
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  variable: "--font-cormorant",
-});
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["300", "400"],
-  variable: "--font-montserrat",
-});
 
 export const metadata: Metadata = {
   title: "FlowerPlus",

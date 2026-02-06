@@ -18,9 +18,9 @@ export default function CollectionsSkeleton() {
                             {[1, 2, 3].map((item) => (
                                 <div
                                     key={item}
-                                    className="w-full md:w-1/3 flex-shrink-0"
+                                    className="w-full md:w-1/3 shrink-0"
                                 >
-                                    <div className="aspect-[4/5] rounded-xl mb-6 overflow-hidden">
+                                    <div className="aspect-4/5] rounded-xl mb-6 overflow-hidden">
                                         <Skeleton className="h-full w-full" />
                                     </div>
                                     <Skeleton className="h-8 w-3/4 mb-2" />

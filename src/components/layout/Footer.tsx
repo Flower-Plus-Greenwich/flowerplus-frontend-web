@@ -85,9 +85,11 @@ export default function Footer() {
                         </p>
                         <form className="flex w-full">
                             <input
+                                name="email" 
                                 type="email"
                                 placeholder="Your email"
                                 className="flex-1 bg-white border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-black/20"
+                                autoComplete="on"
                                 required
                             />
                             <button
